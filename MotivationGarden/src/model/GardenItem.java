@@ -26,6 +26,11 @@ public abstract class GardenItem {
     protected int positionY;
     
     /**
+     * Image path for this item
+     */
+    protected String imagePath;
+    
+    /**
      * Default constructor (required for JSON deserialization)
      */
     public GardenItem() {
