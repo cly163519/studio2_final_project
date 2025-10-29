@@ -1,6 +1,7 @@
 package main;
 
 import ecs100.*;
+import model.Cow;
 import ui.GUI;
 
 public class Main {
@@ -21,7 +22,10 @@ public class Main {
 		//String test = Console.askString("Type a string:");
 		//Console.println(test);
 		
+		Cow cow = new Cow(1, 3);
+		GUI.drawItem(cow);
 		
+		UI.println(cow.getImagePath());
 
 	}
 

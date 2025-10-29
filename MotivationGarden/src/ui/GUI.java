@@ -78,7 +78,7 @@ public class GUI {
 				double xMax = x+SPRITE_WIDTH; // when the mouse is hovering over a tile.
 				double yMin = y;
 				double yMax = y+SPRITE_HEIGHT; 
-				int gridX = j+1; // <- Storing the x and y values that the item objects will use. This is so
+				int gridX = j+1; // <- Storing the x and y values that the gardenItem objects will use. This is so
 				int gridY = i+1; // we know which tile is at which place in the grid.
 				
 				Tile newTile = new Tile(x, y, xMin, xMax, yMin, yMax, gridX, gridY);
@@ -89,7 +89,7 @@ public class GUI {
 				x += SPRITE_WIDTH; // <- Move right before next loop
 				
 			}
-			x = GARDEN_GRID_LEFT;
+			x = GARDEN_GRID_LEFT; // <- Move back to far left
 			y += SPRITE_HEIGHT; // <- Move down before next loop
 		}	
 	}
@@ -152,10 +152,9 @@ public class GUI {
 	/// drawItem:
 	/** Any GardenItem can be drawn on the screen by passing it through this method. It's based on the GardenItem's x and y fields.
 	*  
-	*	@param GardenItem			GardenItem: This GardenItem's sprite will be drawn where it belongs on the grid (decided by x and y)
+	*	@param GardenItem	GardenItem: This GardenItem's sprite will be drawn where it belongs on the grid (decided by x and y)
 	*	@return ->			N/A.	
 	*																														*/
-
 	public void drawItem(GardenItem item) {
 		String sprite = item.getImagePath();
 		int x = item.getPositionX();

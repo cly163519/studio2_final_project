@@ -56,7 +56,11 @@ public abstract class GardenItem {
      * 
      * @return String path to the image file
      */
-    public abstract String getImagePath();
+    public String getImagePath() {
+    	
+    	return this.imagePath;
+    	
+    }
     
     // ========== Getters and Setters ==========
     
