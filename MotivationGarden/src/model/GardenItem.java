@@ -26,6 +26,11 @@ public abstract class GardenItem {
     protected int positionY;
     
     /**
+     * Image path for this item
+     */
+    protected String imagePath;
+    
+    /**
      * Default constructor (required for JSON deserialization)
      */
     public GardenItem() {
@@ -51,7 +56,11 @@ public abstract class GardenItem {
      * 
      * @return String path to the image file
      */
-    public abstract String getImagePath();
+    public String getImagePath() {
+    	
+    	return this.imagePath;
+    	
+    }
     
     // ========== Getters and Setters ==========
     

@@ -56,7 +56,7 @@ public class Animal extends GardenItem {
      */
     @Override
     public String getImagePath() {
-        return Constants.ANIMAL_IMAGE_DIR + type + ".png";
+        return Constants.ANIMAL_IMAGE_DIR + this.type + ".png";
     }
     
     // ========== Getter and Setter ==========
