@@ -26,7 +26,7 @@ public class Main {
 
 	public Main() throws InterruptedException {
 		
-		GUI GUI = new GUI(); // <- Creates GUI
+		GUI GUI = new GUI(); // <- Creates GUI  
 		//String test = Console.askString("Type a string:");
 		//Console.println(test);
 		
