@@ -3,7 +3,7 @@ package model;
 import main.Main;
 import util.Constants;
 
-public class Cow extends Animal {
+public class Chicken extends Animal {
 	
 	// PROTECTED FIELDS INHERITED FROM 'ITEM':
 	// x and y position, imagePath (file path to image that GUI will draw)
@@ -11,11 +11,11 @@ public class Cow extends Animal {
 	String type;
 	int moveChance;
 	
-	public Cow(int x, int y) {
+	public Chicken(int x, int y) {
 		this.positionX = x;
 		this.positionY = y;
-		this.type = "cow";
-		this.moveChance = 3;
+		this.type = "chicken";
+		this.moveChance = 8;
 	}
 	
 	@Override

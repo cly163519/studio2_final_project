@@ -12,7 +12,7 @@ import util.Constants;
 
 public class Plant extends GardenItem {
 	
-	private String type;
+	protected String type;
 
 
 

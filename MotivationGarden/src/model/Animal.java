@@ -79,6 +79,10 @@ public class Animal extends GardenItem {
         this.type = type;
     }
     
+    public void moveRandomly() {
+    	
+    }
+    
     /**
      * Returns a string representation of this animal
      * 

@@ -155,7 +155,7 @@ public class GUI {
 	*	@param GardenItem	GardenItem: This GardenItem's sprite will be drawn where it belongs on the grid (decided by x and y)
 	*	@return ->			N/A.	
 	*																														*/
-	public void drawItem(GardenItem item) {
+	public static void drawItem(GardenItem item) {
 		String sprite = item.getImagePath();
 		int x = item.getPositionX();
 		int y = item.getPositionY();

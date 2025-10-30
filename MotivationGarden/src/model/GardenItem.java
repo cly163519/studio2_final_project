@@ -37,6 +37,10 @@ public abstract class GardenItem {
         // Empty constructor for JSON
     }
     
+    public void moveRandomly() {
+    	
+    }
+    
     /**
      * Constructor to initialize a garden item with position
      * 

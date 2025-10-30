@@ -3,25 +3,22 @@ package model;
 import main.Main;
 import util.Constants;
 
-public class Cow extends Animal {
-	
-	// PROTECTED FIELDS INHERITED FROM 'ITEM':
-	// x and y position, imagePath (file path to image that GUI will draw)
-	
+public class Pig extends Animal {
+
 	String type;
 	int moveChance;
 	
-	public Cow(int x, int y) {
+	public Pig(int x, int y) {
 		this.positionX = x;
 		this.positionY = y;
-		this.type = "cow";
-		this.moveChance = 3;
+		this.type = "pig";
+		this.moveChance = 5;
 	}
 	
 	@Override
     public String getImagePath() {
         return Constants.ANIMAL_IMAGE_DIR + this.type + ".png";
-    }
+	}
 	
 	@Override
     public void moveRandomly() {
