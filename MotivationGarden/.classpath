@@ -6,7 +6,7 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="src" path="resources"/>
 	<classpathentry kind="lib" path="/MotivationGardenGUI/lib/ecs100.jar"/>
+	<classpathentry kind="lib" path="lib/ecs100.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
