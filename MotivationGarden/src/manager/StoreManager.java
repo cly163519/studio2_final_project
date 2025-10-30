@@ -15,7 +15,7 @@ public class StoreManager {
 	public static void init() {
 		storeItems = StoreDataController.loadStoreItems(); // load from file
 		if (storeItems == null) {
-			storeItems = new ArrayList<>(); // if no file, create new
+			storeItems = new ArrayList<>(); // if no file, create new 
 		}
 	}
 
