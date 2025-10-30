@@ -4,6 +4,11 @@ import datacontroller.TaskDataController;
 import model.Task;
 import util.Constants;
 import java.util.List;
+import java.util.ArrayList;
+import java.util.Comparator;
+
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * TaskManager - Manages all tasks
@@ -26,6 +31,16 @@ public class TaskManager {
      */
     public static void init() {
         // TODO: Implementation
+    	if (initialized) {
+            return;
+        }
+
+        tasks = new ArrayList<>(TaskDataController.loadTasks());
+        nextId = tasks.stream()
+                .map(Task::getId)
+                .max(Comparator.naturalOrder())
+                .orElse(0) + 1;
+        initialized = true;
     }
     
     
@@ -40,7 +55,18 @@ public class TaskManager {
      */
     public static Task createTask(String title, String description, String category) {
         // TODO: Implementation
-        return null;
+    	if (!initialized) {
+            init();
+        }
+
+        Objects.requireNonNull(title, "title");
+        Objects.requireNonNull(description, "description");
+        Objects.requireNonNull(category, "category");
+
+        Task task = new Task(nextId++, title, description, 1, category);
+        tasks.add(task);
+        TaskDataController.saveTasks(tasks);
+        return task;
     }
     
     
@@ -52,7 +78,10 @@ public class TaskManager {
      */
     public static List<Task> getAllTasks() {
         // TODO: Implementation
-        return null;
+    	if (!initialized) {
+            init();
+        }
+        return new ArrayList<>(tasks);
     }
     
     /**
@@ -62,6 +91,15 @@ public class TaskManager {
      */
     public static Task getTaskById(int taskId) {
         // TODO: Implementation
+    	if (!initialized) {
+            init();
+        }
+
+        for (Task task : tasks) {
+            if (task.getId() == taskId) {
+                return task;
+            }
+        }
         return null;
     }
     
@@ -71,7 +109,13 @@ public class TaskManager {
      */
     public static List<Task> getUncompletedTasks() {
         // TODO: Implementation
-        return null;
+    	if (!initialized) {
+            init();
+        }
+
+        return tasks.stream()
+                .filter(task -> !task.isCompleted())
+                .collect(Collectors.toList());
     }
     
     /**
@@ -80,7 +124,13 @@ public class TaskManager {
      */
     public static List<Task> getCompletedTasks() {
         // TODO: Implementation
-        return null;
+    	if (!initialized) {
+            init();
+        }
+
+        return tasks.stream()
+                .filter(Task::isCompleted)
+                .collect(Collectors.toList());
     }
     
     /**
@@ -90,7 +140,15 @@ public class TaskManager {
      */
     public static List<Task> getTasksByCategory(String category) {
         // TODO: Implementation
-        return null;
+    	if (!initialized) {
+            init();
+        }
+
+        String normalized = category == null ? "" : category.trim().toLowerCase();
+        return tasks.stream()
+                .filter(task -> task.getCategory() != null
+                        && task.getCategory().trim().toLowerCase().equals(normalized))
+                .collect(Collectors.toList());
     }
     
     
@@ -103,7 +161,14 @@ public class TaskManager {
      */
     public static boolean completeTask(int taskId) {
         // TODO: Implementation
-        return false;
+    	Task task = getTaskById(taskId);
+        if (task == null || task.isCompleted()) {
+            return false;
+        }
+
+        task.setCompleted(true);
+        TaskDataController.saveTasks(tasks);
+        return true;
     }
     
     /**
@@ -115,7 +180,19 @@ public class TaskManager {
      */
     public static boolean updateTask(int taskId, String newTitle, String newDescription) {
         // TODO: Implementation
-        return false;
+    	Task task = getTaskById(taskId);
+        if (task == null) {
+            return false;
+        }
+
+        if (newTitle != null) {
+            task.setTitle(newTitle);
+        }
+        if (newDescription != null) {
+            task.setDescription(newDescription);
+        }
+        TaskDataController.saveTasks(tasks);
+        return true;
     }
     
     
@@ -128,6 +205,14 @@ public class TaskManager {
      */
     public static boolean deleteTask(int taskId) {
         // TODO: Implementation
-        return false;
+    	if (!initialized) {
+            init();
+        }
+
+        boolean removed = tasks.removeIf(task -> task.getId() == taskId);
+        if (removed) {
+            TaskDataController.saveTasks(tasks);
+        }
+        return removed;
     }
 }

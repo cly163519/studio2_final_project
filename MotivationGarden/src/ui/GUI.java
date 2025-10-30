@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import ecs100.*;
+import javax.swing.SwingUtilities;
 import main.Main;
 import model.Cow;
 import model.GardenItem;
@@ -55,6 +56,8 @@ public class GUI {
 		// UI Buttons:
 		UI.addButton("QUIT", UI::quit );
 		UI.addButton("Buy cow", this::buy); //Delete later
+		//SwingUtilities.invokeLater(ToDoUI::new);
+		new ToDoUI();
 		
 		/*UI.addButton("Clear All", this::clearAll);
 		UI.addButton("Draw Cow", this::drawCow);*/
