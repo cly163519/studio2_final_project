@@ -52,11 +52,18 @@ public class GUI {
 		
 		// UI Buttons:
 		UI.addButton("QUIT", UI::quit );
-		UI.addButton("Clear All", this::clearAll);
-		UI.addButton("Draw Cow", this::drawCow);
+		UI.addButton("Buy cow", this::buy); //Delete later
+		
+		/*UI.addButton("Clear All", this::clearAll);
+		UI.addButton("Draw Cow", this::drawCow);*/
 	}
 	
 /* ====================================================================================================================	*/
+	
+	//Temporary methods:
+	public void buy() {
+		Main.buy();
+	}
 	
 	/// createGrid:
 	/** Draws the tiles on screen and create a class containing that tile's properties.

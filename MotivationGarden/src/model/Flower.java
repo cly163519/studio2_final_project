@@ -6,6 +6,7 @@ public class Flower extends Plant {
 		this.type = "flower";
 		this.positionX = x;
 		this.positionY = y;
+		this.price = 3;
 	}
 	
 }

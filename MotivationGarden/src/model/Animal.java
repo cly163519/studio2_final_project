@@ -79,6 +79,10 @@ public class Animal extends GardenItem {
         this.type = type;
     }
     
+    public int getPrice() {
+    	return this.price;
+    }
+    
     public void moveRandomly() {
     	
     }

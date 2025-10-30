@@ -16,6 +16,7 @@ public class Cow extends Animal {
 		this.positionY = y;
 		this.type = "cow";
 		this.moveChance = 3;
+		this.price = 15;
 	}
 	
 	@Override
@@ -27,10 +28,16 @@ public class Cow extends Animal {
     public void moveRandomly() {
 		int randomNumber = Main.randomInt(1, 10);
 		if ( randomNumber >= moveChance ) {
+			
 			int moveX = Main.randomInt(-1, 1);
-	        if (this.positionX + moveX >= 1) this.positionX += moveX;
+	        if (this.positionX + moveX >= 1 && this.positionX + moveX <= Main.getGardenWidth() ) {
+	        	this.positionX += moveX;
+	        }
 	        int moveY = Main.randomInt(-1, 1);
-	        if (this.positionY + moveY >= 1) this.positionY += moveY;
+	        
+	        if (this.positionY + moveY >= 1 && this.positionY + moveY <= Main.getGardenHeight() ) {
+	        	this.positionY += moveY;
+	        }
 		}
     }
 	

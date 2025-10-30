@@ -6,6 +6,7 @@ public class Tree extends Plant {
 		this.type = "tree";
 		this.positionX = x;
 		this.positionY = y;
+		this.price = 10;
 	}
 	
 }

@@ -16,6 +16,11 @@ package model;
 public abstract class GardenItem {
     
     /**
+     * How much should the item cost?
+     */
+    protected int price;
+	
+    /**
      * X-coordinate position in the garden
      */
     protected int positionX;
@@ -93,6 +98,15 @@ public abstract class GardenItem {
      */
     public int getPositionY() {
         return positionY;
+    }
+    
+    /**
+     * Get the item's price.
+     * 
+     * @return int price
+     */
+    public int getPrice() {
+        return this.price;
     }
     
     /**

@@ -2,12 +2,15 @@ package manager;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import model.GardenItem;
 import model.StoreItem;
 import datacontroller.StoreDataController;
 
 public class StoreManager {
 
 	private static List<StoreItem> storeItems;
+	private static int money;
 
 	public static void init() {
 		storeItems = StoreDataController.loadStoreItems(); // load from file
@@ -26,9 +29,18 @@ public class StoreManager {
 	 * @param item The item to purchase
 	 * @return boolean true if purchase successful, false if not enough coins
 	 */
-	private static boolean buyItem() {
-		return false;
+	public static boolean canBuy(GardenItem item) {
+		if ( item.getPrice() <= money) return true;
+		else return false;
 
+	}
+	
+	public static int getMoney() {
+		return money;
+	}
+	
+	public static void setMoney(int moneyToAdd) {
+		money = moneyToAdd;
 	}
 
 }
