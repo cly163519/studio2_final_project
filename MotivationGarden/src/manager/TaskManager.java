@@ -1,133 +1,54 @@
 package manager;
 
-import datacontroller.TaskDataController;
 import model.Task;
-import util.Constants;
+import java.util.ArrayList;
 import java.util.List;
 
-/**
- * TaskManager - Manages all tasks
- * Storage: List<Task> tasks (stored here!)
- * File: data/tasks.json
- */
 public class TaskManager {
-    
-    // ========== Fields ==========
-    
-    private static List<Task> tasks;           // Task list
-    private static boolean initialized;        // Init flag
-    private static int nextId;                 // Next task ID
-    
-    
-    // ========== Initialization ==========
-    
-    /**
-     * Initialize task manager (load from file)
-     */
-    public static void init() {
-        // TODO: Implementation
+
+    private static ArrayList<Task> tasks = new ArrayList<>();
+    private static int coins = 0;
+    private static List<Runnable> listeners = new ArrayList<>();
+
+    public static ArrayList<Task> getTasks() {
+        return tasks;
     }
-    
-    
-    // ========== Create ==========
-    
-    /**
-     * Create a new task
-     * @param title Task title
-     * @param description Task description
-     * @param category Category (work/life/study)
-     * @return Task created task object
-     */
-    public static Task createTask(String title, String description, String category) {
-        // TODO: Implementation
-        return null;
+
+    public static int getCoins() {
+        return coins;
     }
-    
-    
-    // ========== Read ==========
-    
-    /**
-     * Get all tasks
-     * @return List<Task> all tasks
-     */
-    public static List<Task> getAllTasks() {
-        // TODO: Implementation
-        return null;
+
+    public static void addTask(String title) {
+        tasks.add(new Task(title));
+        notifyListeners();
     }
-    
-    /**
-     * Get task by ID
-     * @param taskId Task ID
-     * @return Task task object or null
-     */
-    public static Task getTaskById(int taskId) {
-        // TODO: Implementation
-        return null;
+
+    public static void deleteTask(String title) {
+        tasks.removeIf(t -> t.getTitle().equalsIgnoreCase(title));
+        notifyListeners();
     }
-    
-    /**
-     * Get uncompleted tasks
-     * @return List<Task> uncompleted tasks
-     */
-    public static List<Task> getUncompletedTasks() {
-        // TODO: Implementation
-        return null;
+
+    public static void markTaskDone(String title) {
+        for (Task t : tasks) {
+            if (t.getTitle().equalsIgnoreCase(title) && !t.isCompleted()) {
+                t.setCompleted(true);
+                coins += 5; // reward coins
+            }
+        }
+        notifyListeners();
     }
-    
-    /**
-     * Get completed tasks
-     * @return List<Task> completed tasks
-     */
-    public static List<Task> getCompletedTasks() {
-        // TODO: Implementation
-        return null;
+
+    public static void addListener(Runnable r) {
+        listeners.add(r);
     }
-    
-    /**
-     * Get tasks by category
-     * @param category Category to filter
-     * @return List<Task> tasks in category
-     */
-    public static List<Task> getTasksByCategory(String category) {
-        // TODO: Implementation
-        return null;
+
+    public static void removeListener(Runnable r) {
+        listeners.remove(r);
     }
-    
-    
-    // ========== Update ==========
-    
-    /**
-     * Complete a task (rewards coins)
-     * @param taskId Task ID
-     * @return boolean true if success
-     */
-    public static boolean completeTask(int taskId) {
-        // TODO: Implementation
-        return false;
-    }
-    
-    /**
-     * Update task information
-     * @param taskId Task ID
-     * @param newTitle New title
-     * @param newDescription New description
-     * @return boolean true if success
-     */
-    public static boolean updateTask(int taskId, String newTitle, String newDescription) {
-        // TODO: Implementation
-        return false;
-    }
-    
-    
-    // ========== Delete ==========
-    
-    /**
-     * Delete a task
-     * @param taskId Task ID
-     * @return boolean true if success
-     */
-    public static boolean deleteTask(int taskId) {
-        // TODO: Implementation
-        return false;
+
+    private static void notifyListeners() {
+        for (Runnable r : listeners) {
+            r.run();
+        }
     }
 }

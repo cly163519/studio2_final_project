@@ -56,8 +56,7 @@ public class GUI {
 		UI.addButton("QUIT", UI::quit );
 		UI.addButton("Buy cow", this::buy); //Delete later
 		
-		/*UI.addButton("Clear All", this::clearAll);
-		UI.addButton("Draw Cow", this::drawCow);*/
+		
 	}
 	
 /* ====================================================================================================================	*/
@@ -145,7 +144,7 @@ public class GUI {
 			for (Tile tile : tiles) {
 				if ( tile.checkForHovered(x, y) ) {
 					hoveredTile = tile;
-					UI.println("Hovering over tile at "+hoveredTile.getGridX()+"X and "+hoveredTile.getGridY()+"Y.");
+					//UI.println("Hovering over tile at "+hoveredTile.getGridX()+"X and "+hoveredTile.getGridY()+"Y.");
 				}
 			}
 			
@@ -211,6 +210,5 @@ public class GUI {
 		int y = UI.askInt("Y position: ");
 		Cow cow = new Cow(x, y);
 		drawItem(cow);
-	}
-		
+	}	
 }
