@@ -1,33 +1,35 @@
 package main;
 
 import java.util.ArrayList;
-
 import javax.swing.*;
 
 import ecs100.*;
 import manager.StoreManager;
+import manager.TaskManager; // ✅ added import for shared coin system
 import model.*;
 import ui.GUI;
 import ui.TodoPanel;
 
 public class Main {
 
-    // Collections for farm
+    // Collections for farm items
     static ArrayList<GardenItem> items = new ArrayList<>();
     static ArrayList<GardenItem> newItems = new ArrayList<>();
 
+    // Garden grid size
     private static int GARDEN_WIDTH = 17;
     private static int GARDEN_HEIGHT = 17;
 
     public Main() throws InterruptedException {
 
-        // Start farm money
-        StoreManager.setMoney(100);
+        // ✅ Initialize the shared money system
+        TaskManager.addCoins(100);   // starting coins for both farm + To-Do list
+        StoreManager.init();         // sync StoreManager.money with TaskManager.money
 
-        // Create GUI for farm
+        // ✅ Create GUI for farm
         GUI gui = new GUI();
 
-        // Add some initial animals/trees/flowers
+        // Add some initial items
         items.add(new Cow(3, 3));
         items.add(new Pig(3, 1));
         items.add(new Chicken(4, 10));
@@ -37,7 +39,7 @@ public class Main {
         // Draw initial farm
         drawWorld();
 
-        // Launch To-Do list window
+        // ✅ Launch To-Do list window (shows the same coin balance)
         SwingUtilities.invokeLater(() -> {
             JFrame todoFrame = new JFrame("To-Do List with Coins");
             todoFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -47,53 +49,35 @@ public class Main {
             todoFrame.setVisible(true);
         });
 
-        // Farm world update loop
+        // Run farm update loop
         updateWorld();
     }
 
+    // ✅ Unified buy method using shared money system
     public static void buy() {
         UI.println("You have $" + StoreManager.getMoney());
         String input = UI.askString("What to buy: ");
         int positionX = UI.askInt("X Position: ");
-        int positionY = UI.askInt("Y position: ");
+        int positionY = UI.askInt("Y Position: ");
+
+        GardenItem newItem = null;
+
         switch (input.toUpperCase()) {
-            case "COW":
-                Cow newCow = new Cow(positionX, positionY);
-                if (StoreManager.canBuy(newCow)) {
-                    newItems.add(newCow);
-                    StoreManager.setMoney(StoreManager.getMoney() - newCow.getPrice());
-                } else UI.println("You can't afford that!");
-                break;
-            case "CHICKEN":
-                Chicken newChicken = new Chicken(positionX, positionY);
-                if (StoreManager.canBuy(newChicken)) {
-                    newItems.add(newChicken);
-                    StoreManager.setMoney(StoreManager.getMoney() - newChicken.getPrice());
-                } else UI.println("You can't afford that!");
-                break;
-            case "PIG":
-                Pig newPig = new Pig(positionX, positionY);
-                if (StoreManager.canBuy(newPig)) {
-                    newItems.add(newPig);
-                    StoreManager.setMoney(StoreManager.getMoney() - newPig.getPrice());
-                } else UI.println("You can't afford that!");
-                break;
-            case "TREE":
-                Tree newTree = new Tree(positionX, positionY);
-                if (StoreManager.canBuy(newTree)) {
-                    newItems.add(newTree);
-                    StoreManager.setMoney(StoreManager.getMoney() - newTree.getPrice());
-                } else UI.println("You can't afford that!");
-                break;
-            case "FLOWER":
-                Flower newFlower = new Flower(positionX, positionY);
-                if (StoreManager.canBuy(newFlower)) {
-                    newItems.add(newFlower);
-                    StoreManager.setMoney(StoreManager.getMoney() - newFlower.getPrice());
-                } else UI.println("You can't afford that!");
-                break;
+            case "COW": newItem = new Cow(positionX, positionY); break;
+            case "CHICKEN": newItem = new Chicken(positionX, positionY); break;
+            case "PIG": newItem = new Pig(positionX, positionY); break;
+            case "TREE": newItem = new Tree(positionX, positionY); break;
+            case "FLOWER": newItem = new Flower(positionX, positionY); break;
             default:
                 UI.println("Input not recognized.");
+                return;
+        }
+
+        if (StoreManager.buyItem(newItem)) { // ✅ deducts shared coins automatically
+            newItems.add(newItem);
+            UI.println("Bought " + input + "! Coins left: " + StoreManager.getMoney());
+        } else {
+            UI.println("You can't afford that!");
         }
     }
 
@@ -120,6 +104,7 @@ public class Main {
         }
     }
 
+    // Garden helpers
     public static int getGardenHeight() { return GARDEN_HEIGHT; }
     public static int getGardenWidth() { return GARDEN_WIDTH; }
 
@@ -127,6 +112,7 @@ public class Main {
         return minValue + (int)(Math.random() * (maxValue - minValue + 1));
     }
 
+    // Entry point
     public static void main(String[] args) throws InterruptedException {
         UI.initialise();
         new Main();

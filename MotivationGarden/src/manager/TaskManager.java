@@ -7,7 +7,7 @@ import java.util.List;
 public class TaskManager {
 
     private static ArrayList<Task> tasks = new ArrayList<>();
-    private static int coins = 0;
+    private static int money = 0;
     private static List<Runnable> listeners = new ArrayList<>();
 
     public static ArrayList<Task> getTasks() {
@@ -15,7 +15,7 @@ public class TaskManager {
     }
 
     public static int getCoins() {
-        return coins;
+        return money;
     }
 
     public static void addTask(String title) {
@@ -32,7 +32,7 @@ public class TaskManager {
         for (Task t : tasks) {
             if (t.getTitle().equalsIgnoreCase(title) && !t.isCompleted()) {
                 t.setCompleted(true);
-                coins += 5; // reward coins
+                money += 5; // reward coins
             }
         }
         notifyListeners();
@@ -51,4 +51,9 @@ public class TaskManager {
             r.run();
         }
     }
+    public static void addCoins(int amount) {
+        money += amount;
+        notifyListeners(); // update any UI (TodoPanel or StoreManager listener)
+    }
 }
+
