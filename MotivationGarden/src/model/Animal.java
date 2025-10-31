@@ -22,7 +22,7 @@ public class Animal extends GardenItem {
     /**
      * Type of the animal (cow, dog, or cat)
      */
-    private String type;
+    protected String type;
     
     /**
      * Default constructor (required for JSON deserialization)

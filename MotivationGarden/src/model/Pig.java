@@ -5,7 +5,7 @@ import util.Constants;
 
 public class Pig extends Animal {
 
-	String type;
+	//String type;
 	int moveChance;
 	
 	public Pig(int x, int y) {
