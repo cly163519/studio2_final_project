@@ -46,7 +46,7 @@ public class Main {
         plants.add(new Flower(5, 2));
         plants.add(new Tree(6, 5));
 
-        drawWorld();
+        GUI.drawWorld();
 
         // ✅ Launch To-Do list window (shows the same coin balance)
         SwingUtilities.invokeLater(() -> {
@@ -63,49 +63,6 @@ public class Main {
 
 /* ====================================================================================================================	*/
 
-    // ✅ Unified buy method using shared money system
-    public static void buy() {
-        UI.println("You have $" + StoreManager.getMoney());
-        String input = UI.askString("What to buy: ");
-        int positionX = UI.askInt("X Position: ");
-        int positionY = UI.askInt("Y Position: ");
-
-        GardenItem newItem = null;
-
-        switch (input.toUpperCase()) {
-            case "COW": newItem = new Cow(positionX, positionY); break;
-            case "CHICKEN": newItem = new Chicken(positionX, positionY); break;
-            case "PIG": newItem = new Pig(positionX, positionY); break;
-            case "TREE": newItem = new Tree(positionX, positionY); break;
-            case "FLOWER": newItem = new Flower(positionX, positionY); break;
-            default:
-                UI.println("Input not recognized.");
-                return;
-        }
-
-        if (StoreManager.buyItem(newItem)) { // ✅ deducts shared coins automatically
-            newItems.add(newItem);
-            UI.println("Bought " + input + "! Coins left: " + StoreManager.getMoney());
-        } else {
-            UI.println("You can't afford that!");
-        }
-    }
-    
-	/// drawWorld:
-	/** Runs the GUI's draw methods on all gardenItems + static images that need to be on screen..
-	*  
-	*	@return ->			N/A.	
-	*																														*/
-    public void drawWorld() {
-    	GUI.drawStaticImages();
-        for (GardenItem animal : animals) {
-            GUI.drawItem(animal);
-        }
-        for (GardenItem plant : plants) {
-            GUI.drawItem(plant);
-        }
-        GUI.drawStore();
-    }
     
 	/// updateWorld:
 	/** Moves animals, adds any GardenItems that were bought from the store to the world, draw world, then waits to repeat.
@@ -129,8 +86,7 @@ public class Main {
             	}
             	newItems.clear(); // <- Clear newItems now that they're in the right place.
             }
-            UI.clearGraphics();
-            drawWorld();
+            GUI.drawWorld();
             Thread.sleep(1000/frameRate); // <- Repeat after 1/frameRate seconds.
         }
     }
@@ -160,6 +116,24 @@ public class Main {
 	*																														*/
 	public static int getGardenWidth() {
 		return GARDEN_WIDTH;
+	}
+	
+	/** Returns the the world's plants ArrayList.
+	*  
+	*	@param param		N/A.
+	*	@return ->			ArrayList<Animal>.	
+	*																														*/
+	public static ArrayList<Plant> getPlants() {
+		return plants;
+	}
+	
+	/** Returns the the world's animals ArrayList.
+	*  
+	*	@param param		N/A.
+	*	@return ->			ArrayList<Animal>.	
+	*																														*/
+	public static ArrayList<Animal> getAnimals() {
+		return animals;
 	}
 
 	/** Returns a random integer between two values.

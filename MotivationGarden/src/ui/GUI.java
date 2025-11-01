@@ -42,7 +42,7 @@ public class GUI {
 	// Store tiles configuration:
 	private static int STORE_TILE_COUNT = 6;
 	private static int STORE_TILE_SIZE = 64;
-	private static int STORE_GRID_TOP = GARDEN_GRID_TOP-(SPRITE_HEIGHT*6);
+	private static int STORE_GRID_TOP = GARDEN_GRID_TOP-((SPRITE_HEIGHT*6)-8);
 	private static int STORE_GRID_LEFT = GARDEN_GRID_LEFT;
 	private static int STORE_GRID_WIDTH = STORE_TILE_SIZE*STORE_TILE_COUNT;
 	
@@ -54,16 +54,16 @@ public class GUI {
 	private static ArrayList<StoreTile> storeTiles = new ArrayList<StoreTile>();
 	
 //	Class-Wide Variables:
-	Boolean showHighlight = false;
-	Tile hoveredTile; // <- The tile currently being hovered over.
-	StoreTile hoveredStoreTile;
-	GardenItem itemBeingPlaced = null;
+	private static Boolean showHighlight = false;
+	private static Boolean inStore = false;
+	private static Tile hoveredTile; // <- The tile currently being hovered over.
+	private static StoreTile hoveredStoreTile;
+	private static GardenItem itemBeingPlaced = null;
 
 //	Images:
-	static String gardenImg = "../MotivationGarden/resources/images/ui/garden.png";
-	static String barnImg = "../MotivationGarden/resources/images/ui/barn.png";
-	static String backgroundImg = "../MotivationGarden/resources/images/ui/background.png";
-	//static String toDoListImg = "../MotivationGarden/resources/images/ui/scroll.png";
+	private static String gardenImg = "../MotivationGarden/resources/images/ui/garden.png";
+	private static String barnImg = "../MotivationGarden/resources/images/ui/barn.png";
+	private static String backgroundImg = "../MotivationGarden/resources/images/ui/background.png";
 	
 //	Constructor
 	public GUI() {
@@ -75,8 +75,9 @@ public class GUI {
 		UI.setMouseMotionListener(this::doMouse); // <- Create mouse listener
 		
 		// UI Buttons:
+		UI.addButton("SAVE", UI::quit );
+		UI.addButton("LOAD", UI::quit );
 		UI.addButton("QUIT", UI::quit );
-		UI.addButton("Buy cow", this::buy); //Delete later
 		
 		
 	}
@@ -84,11 +85,25 @@ public class GUI {
 /* ====================================================================================================================	*/
 	
 	
-	
-	//Temporary methods:
-	public void buy() {
-		Main.buy();
-	}
+	/// drawWorld:
+	/** Runs the GUI's draw methods on all gardenItems + static images that need to be on screen..
+	*  
+	*	@return ->			N/A.	
+	*																														*/
+    public static void drawWorld() {
+    	UI.clearGraphics();
+    	drawStaticImages();
+        for (GardenItem animal : Main.getAnimals() ) {
+            drawItem(animal);
+        }
+        for (GardenItem plant : Main.getPlants() ) {
+            drawItem(plant);
+        }
+        if (showHighlight && hoveredTile != null) {
+        	hoveredTile.drawHighlight();
+        }
+        drawStore();
+    }
 	
 	/// createGrid:
 	/** Draws the tiles on screen and create a class containing that tile's properties.
@@ -159,8 +174,6 @@ public class GUI {
 			
 		}
 		
-		UI.println(storeTiles.size());
-		
 	}
 	
 	/// drawStaticImages: 
@@ -170,10 +183,9 @@ public class GUI {
 	*																														*/
 	public static void drawStaticImages() {
 		
-		UI.drawImage(backgroundImg, 0, 0);
-		UI.drawImage(gardenImg, GARDEN_GRID_LEFT, GARDEN_GRID_TOP-(SPRITE_HEIGHT*3));
-		UI.drawImage(barnImg, GARDEN_GRID_LEFT+GARDEN_GRID_WIDTH/2-64, GARDEN_GRID_TOP-(SPRITE_HEIGHT*3));
-		//UI.drawImage(toDoListImg, 25, GARDEN_GRID_TOP-(32*3), GARDEN_GRID_LEFT-50, GARDEN_GRID_HEIGHT+(32*3));
+		UI.drawImage(backgroundImg, 0, 0); // <- Background (water)
+		UI.drawImage(gardenImg, GARDEN_GRID_LEFT, GARDEN_GRID_TOP-(SPRITE_HEIGHT*3)); // <- Garden (grass)
+		UI.drawImage(barnImg, GARDEN_GRID_LEFT+GARDEN_GRID_WIDTH/2-64, GARDEN_GRID_TOP-(SPRITE_HEIGHT*3)); // <- Barn
 		
 	}
 	
@@ -219,13 +231,11 @@ public class GUI {
 			for (Tile tile : tiles) {
 				if ( tile.checkForHovered(x, y) ) {
 					hoveredTile = tile;
-					//UI.println("Hovering over tile at "+hoveredTile.getGridX()+"X and "+hoveredTile.getGridY()+"Y.");
 				}
 			}
 			
 			// When the user clicks on a tile:
 			if ( action.equals("pressed") ) {
-				UI.println("X Position: "+x+". Y Position: "+y+".");
 				if ( itemBeingPlaced != null ) {
 					
 					int placementX = hoveredTile.getGridX();
@@ -247,6 +257,7 @@ public class GUI {
 						StoreManager.buyItem(new Cow(placementX, placementY)); 
 					}
 					
+					showHighlight = false;
 					itemBeingPlaced = null;
 					
 				}
@@ -257,13 +268,13 @@ public class GUI {
 		// If the mouse is currently within the store grid, do these things:
 		if ( x > STORE_GRID_LEFT && x < STORE_GRID_WIDTH && y > STORE_GRID_TOP && y < STORE_GRID_TOP+STORE_TILE_SIZE) {
 			
+			inStore = true;
+			
 			// Check which store tile the mouse is over, and set hoveredStoreTile to that store tile.
 			for (StoreTile storeTile : storeTiles) {
 				if ( storeTile.checkForHovered(x, y) ) {
 					hoveredStoreTile = storeTile;
-					UI.println("Hovering over StoreTile ID "+hoveredStoreTile.getID());
 				}
-				else UI.println("No store tile here.");
 			}
 			
 			// When the user clicks on a store tile:
@@ -275,10 +286,9 @@ public class GUI {
 					itemBeingPlaced = itemBeingBought;
 					showHighlight = true;
 				}
-				
 			}
-			
 		}
+		else inStore = false;
 	}
 	
 	/// drawItem:
@@ -308,7 +318,11 @@ public class GUI {
 	public static void drawStore() {
 		
 		for (StoreTile storeTile : storeTiles) {
-			storeTile.drawTile();
+			UI.drawString("$ "+storeTile.getItem().getPrice(), storeTile.getX()+16, storeTile.getY()-10);
+			if (storeTile == hoveredStoreTile && inStore) {
+				storeTile.drawHighlight();
+			}
+			else storeTile.drawTile();
 		}
 		
 	}

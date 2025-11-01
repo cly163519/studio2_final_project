@@ -2,6 +2,7 @@ package ui;
 
 import ecs100.UI;
 import model.GardenItem;
+import model.Tree;
 
 public class StoreTile {
 	
@@ -15,10 +16,10 @@ public class StoreTile {
 	private double yMax;
 	
 	private int itemID;
-	private GardenItem item;
+	private GardenItem item; // <- The StoreTile has an instance of the item it sells so it can get its properties
 	
-	private String sprite;
-	private String hoverSprite;
+	private String sprite = "../MotivationGarden/resources/images/ui/storetile.png"; // <- For drawing the StoreTile UI
+	private String hoverSprite = "../MotivationGarden/resources/images/ui/storetile_highlight.png";
 
 //	Constructor:
 	public StoreTile(double x, double y, double xMin, double xMax, double yMin, double yMax, int id, GardenItem item) {
@@ -32,7 +33,6 @@ public class StoreTile {
 		this.yMax = yMax;
 		
 		this.itemID = id;
-		
 		this.item = item;
 		
 	}
@@ -57,8 +57,23 @@ public class StoreTile {
 	*	@return ->			N/A.	
 	*																														*/
 	public void drawTile() {
-		UI.drawRect(x, y, 64, 64);
-		UI.drawImage(item.getImagePath(), x, y);
+		UI.drawImage(sprite, x, y);
+		if (item instanceof Tree) { /* Alternative tree sprite here */ }
+		else UI.drawImage(item.getImagePath(), x+16, y+16);
+	}
+	
+	public void drawHighlight() {
+		UI.drawImage(hoverSprite, x, y);
+		if (item instanceof Tree) { /* Alternative tree sprite here */ }
+		else UI.drawImage(item.getImagePath(), x+16, y+16);
+	}
+	
+	public double getX() {
+		return x;
+	}
+	
+	public double getY() {
+		return y;
 	}
 	
 	public int getID() {
