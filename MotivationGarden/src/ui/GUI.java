@@ -5,8 +5,13 @@ import java.util.HashMap;
 
 import ecs100.*;
 import main.Main;
+import model.Animal;
+import model.Chicken;
 import model.Cow;
+import model.Flower;
 import model.GardenItem;
+import model.Pig;
+import model.Tree;
 
 /* ====================================================================================================================	*/
 /**
@@ -34,17 +39,22 @@ public class GUI {
 	private static int GARDEN_GRID_HEIGHT = SPRITE_HEIGHT*Main.getGardenHeight();
 	
 	// Store tiles configuration:
+	private static int STORE_TILE_COUNT = 6;
+	private static int STORE_TILE_SIZE = 64;
 	private static int STORE_GRID_TOP = GARDEN_GRID_TOP-(SPRITE_HEIGHT*6);
 	private static int STORE_GRID_LEFT = GARDEN_GRID_LEFT;
+	private static int STORE_GRID_WIDTH = STORE_TILE_SIZE*STORE_TILE_COUNT;
 	
 //	Collections:
 	private static HashMap<Integer, Integer> GUIxValues = new HashMap<Integer, Integer>(); // <- Converts X and Y values to scaled up co-ords of where those images should be drawn the on-screen grid.
 	private static HashMap<Integer, Integer> GUIyValues = new HashMap<Integer, Integer>();
 
 	private static ArrayList<Tile> tiles = new ArrayList<Tile>(); // <- Each square belongs to a 'tile' class. This is so the x and y position of tile the mouse is over can be stored and accessed.
-
+	private static ArrayList<StoreTile> storeTiles = new ArrayList<StoreTile>();
+	
 //	Class-Wide Variables:
 	Tile hoveredTile; // <- The tile currently being hovered over.
+	StoreTile hoveredStoreTile;
 
 //	Images:
 	static String gardenImg = "../MotivationGarden/resources/images/ui/garden.png";
@@ -56,6 +66,7 @@ public class GUI {
 	public GUI() {
 		
 		createGrid(Main.getGardenWidth(), Main.getGardenHeight()); // <- Draws the grid of tiles
+		createStore();
 		convertXAndYValues(); // <- Fills the HashMaps with all x and y positions of the garden and their equivalent on the GUI. This is so the GUI knows where to draw an item from its x and y fields.
 		
 		UI.setMouseMotionListener(this::doMouse); // <- Create mouse listener
@@ -120,9 +131,32 @@ public class GUI {
 		int y = STORE_GRID_TOP;
 		
 		for (int i = 0 ; i < 5 ; i++) {
-			UI.drawRect(x, y, SPRITE_WIDTH*2, SPRITE_HEIGHT*2);
-			x += SPRITE_WIDTH*2;
+			
+			double xMin = x;
+			double xMax = x+STORE_TILE_SIZE;
+			double yMin = y;
+			double yMax = y+STORE_TILE_SIZE;
+			int id = i;
+			
+			GardenItem item = null;
+			switch (id) {
+			
+			case 0:  	item = 	new Flower(-1, -1); 	break;
+			case 1: 	item = 	new Tree(-1, -1);		break;
+			case 2:		item = 	new Chicken(-1, -1);	break;
+			case 3:		item = 	new Pig(-1, -1);		break;
+			case 4:		item = 	new Cow(-1, -1);		break;
+			default: break;
+			
+			}
+			
+			storeTiles.add(new StoreTile(x, y, xMin, xMax, yMin, yMax, id, item));
+			
+			x+= STORE_TILE_SIZE;
+			
 		}
+		
+		UI.println(storeTiles.size());
 		
 	}
 	
@@ -175,7 +209,7 @@ public class GUI {
 	*																														*/
 	private void doMouse(String action, double x, double y) {
 		
-		// If the mouse is currently within the grid, do these things:
+		// If the mouse is currently within the garden grid, do these things:
 		if ( x > GARDEN_GRID_LEFT && x < GARDEN_GRID_LEFT+GARDEN_GRID_WIDTH && y > GARDEN_GRID_TOP && y < GARDEN_GRID_TOP+GARDEN_GRID_HEIGHT ) {
 			
 			// Check which tile the mouse is over, and set hoveredTile to that tile.
@@ -190,6 +224,44 @@ public class GUI {
 			if ( action.equals("pressed") ) {
 				UI.println("X Position: "+x+". Y Position: "+y+".");
 				Main.addToWorld(new Cow(hoveredTile.getGridX(), hoveredTile.getGridY()));
+			}
+			
+		}
+		
+		// If the mouse is currently within the store grid, do these things:
+		if ( x > STORE_GRID_LEFT && x < STORE_GRID_WIDTH && y > STORE_GRID_TOP && y < STORE_GRID_TOP+STORE_TILE_SIZE) {
+			
+			// Check which store tile the mouse is over, and set hoveredStoreTile to that store tile.
+			for (StoreTile storeTile : storeTiles) {
+				if ( storeTile.checkForHovered(x, y) ) {
+					hoveredStoreTile = storeTile;
+					UI.println("Hovering over StoreTile ID "+hoveredStoreTile.getID());
+				}
+				else UI.println("No store tile here.");
+			}
+			
+			// When the user clicks on a store tile:
+			if ( action.equals("pressed") ) {
+				GardenItem itemBeingBought = hoveredStoreTile.getItem();
+				int newItemXPosition = 1;
+				int newItemYPosition = 1;
+				
+				if ( itemBeingBought instanceof Flower ) { 
+					Main.addToWorld(new Flower(newItemXPosition, newItemYPosition)); 
+				}
+				else if ( itemBeingBought instanceof Tree ) { 
+					Main.addToWorld(new Tree(newItemXPosition, newItemYPosition)); 
+				}
+				else if ( itemBeingBought instanceof Chicken ) { 
+					Main.addToWorld(new Chicken(newItemXPosition, newItemYPosition)); 
+				}
+				else if ( itemBeingBought instanceof Pig ) { 
+					Main.addToWorld(new Pig(newItemXPosition, newItemYPosition)); 
+				}
+				else if ( itemBeingBought instanceof Cow ) { 
+					Main.addToWorld(new Cow(newItemXPosition, newItemYPosition)); 
+				}
+				
 			}
 			
 		}
@@ -217,6 +289,14 @@ public class GUI {
 				UI.drawOval(getGUIX(x), getGUIY(y), SPRITE_WIDTH, SPRITE_HEIGHT);
 			}
 		}
+	}
+	
+	public static void drawStore() {
+		
+		for (StoreTile storeTile : storeTiles) {
+			storeTile.drawTile();
+		}
+		
 	}
 	
 	/// getGUIX:

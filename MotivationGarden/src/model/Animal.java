@@ -22,7 +22,7 @@ public class Animal extends GardenItem {
     /**
      * Type of the animal (cow, dog, or cat)
      */
-    private String type;
+    protected String type;
     
     /**
      * Default constructor (required for JSON deserialization)
@@ -83,6 +83,11 @@ public class Animal extends GardenItem {
     	return this.price;
     }
     
+    /**
+     * Trigger this animal's move method.
+     * 
+     * @return N/A
+     */
     public void moveRandomly() {
     	
     }

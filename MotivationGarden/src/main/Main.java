@@ -98,13 +98,13 @@ public class Main {
 	*																														*/
     public void drawWorld() {
     	GUI.drawStaticImages();
-    	GUI.createStore();
         for (GardenItem animal : animals) {
             GUI.drawItem(animal);
         }
         for (GardenItem plant : plants) {
             GUI.drawItem(plant);
         }
+        GUI.drawStore();
     }
     
 	/// updateWorld:
