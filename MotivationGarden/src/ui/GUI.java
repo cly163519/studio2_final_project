@@ -28,8 +28,8 @@ public class GUI {
 	private static int SPRITE_HEIGHT = 32;
 	
 	// Top and left of the grid:
-	private static int GARDEN_GRID_TOP = 160; // <- Top and left where the garden grid should be drawn
-	private static int GARDEN_GRID_LEFT = 448;
+	private static int GARDEN_GRID_TOP = 32*7; // <- Top and left where the garden grid should be drawn
+	private static int GARDEN_GRID_LEFT = 32*3;
 	
 	// For methods that need to know the total height and width of the garden:
 	private static int GARDEN_GRID_WIDTH = SPRITE_WIDTH*Main.getGardenWidth(); // <- Total width and height of the whole grid. This is for checking if the mouse is hovering over the grid.
@@ -43,8 +43,14 @@ public class GUI {
 
 //	Class-Wide Variables:
 	Tile hoveredTile; // <- The tile currently being hovered over.
+
+//	Images:
+	static String gardenImg = "../MotivationGarden/resources/images/ui/garden.png";
+	static String barnImg = "../MotivationGarden/resources/images/ui/barn.png";
+	static String backgroundImg = "../MotivationGarden/resources/images/ui/background.png";
+	//static String toDoListImg = "../MotivationGarden/resources/images/ui/scroll.png";
 	
-//	Constructor:
+//	Constructor
 	public GUI() {
 		
 		createGrid(Main.getGardenWidth(), Main.getGardenHeight()); // <- Draws the grid of tiles
@@ -78,6 +84,8 @@ public class GUI {
 		int x = GARDEN_GRID_LEFT; // <- Initial X and Y positions for the grid
 		int y = GARDEN_GRID_TOP;
 		
+		drawStaticImages();
+		
 		for (int i = 0 ; i < gardenHeight ; i++) { // <- Draws a row, then move down by the height of the sprite [gardenWidth] times
 			for (int j = 0 ; j < gardenWidth ; j ++) { // <- Draws a square, then moves to the right [gardenWidth] times
 				
@@ -100,6 +108,15 @@ public class GUI {
 			x = GARDEN_GRID_LEFT; // <- Move back to far left
 			y += SPRITE_HEIGHT; // <- Move down before next loop
 		}	
+	}
+	
+	public static void drawStaticImages() {
+		
+		UI.drawImage(backgroundImg, 0, 0);
+		UI.drawImage(gardenImg, GARDEN_GRID_LEFT, GARDEN_GRID_TOP-(SPRITE_HEIGHT*3));
+		UI.drawImage(barnImg, GARDEN_GRID_LEFT+GARDEN_GRID_WIDTH/2-64, GARDEN_GRID_TOP-(SPRITE_HEIGHT*3));
+		//UI.drawImage(toDoListImg, 25, GARDEN_GRID_TOP-(32*3), GARDEN_GRID_LEFT-50, GARDEN_GRID_HEIGHT+(32*3));
+		
 	}
 	
 	/// convertXAndYValues:

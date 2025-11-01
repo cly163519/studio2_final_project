@@ -13,12 +13,15 @@ import ui.TodoPanel;
 public class Main {
 
     // Collections for farm items
-    static ArrayList<GardenItem> items = new ArrayList<>();
+	
+    static ArrayList<Animal> animals = new ArrayList<>(); // <- Animals and Plants are separated so they can be read by JSON files 
+    static ArrayList<Plant> plants = new ArrayList<>();
+    
     static ArrayList<GardenItem> newItems = new ArrayList<>();
 
     // Garden grid size
-    private static int GARDEN_WIDTH = 17;
-    private static int GARDEN_HEIGHT = 17;
+    private static int GARDEN_WIDTH = 16;
+    private static int GARDEN_HEIGHT = 16;
 
     public Main() throws InterruptedException {
 
@@ -30,11 +33,11 @@ public class Main {
         GUI gui = new GUI();
 
         // Add some initial items
-        items.add(new Cow(3, 3));
-        items.add(new Pig(3, 1));
-        items.add(new Chicken(4, 10));
-        items.add(new Flower(5, 2));
-        items.add(new Tree(6, 5));
+        animals.add(new Cow(3, 3));
+        animals.add(new Pig(3, 1));
+        animals.add(new Chicken(4, 10));
+        plants.add(new Flower(5, 2));
+        plants.add(new Tree(6, 5));
 
         // Draw initial farm
         drawWorld();
@@ -82,27 +85,37 @@ public class Main {
     }
 
     public void drawWorld() {
-        for (GardenItem item : items) {
-            GUI.drawItem(item);
+    	GUI.drawStaticImages();
+        for (GardenItem animal : animals) {
+            GUI.drawItem(animal);
+        }
+        for (GardenItem plant : plants) {
+            GUI.drawItem(plant);
         }
     }
 
     public void updateWorld() throws InterruptedException {
         while (true) {
-            for (GardenItem item : items) {
-                if (item instanceof Animal) {
-                    item.moveRandomly();
+            for (Animal animal : animals) {
+                    animal.moveRandomly();
                     UI.clearGraphics();
                     drawWorld();
                 }
-            }
-            if (!newItems.isEmpty()) {
-                items.addAll(newItems);
-                newItems.clear();
+            if (newItems.size() > 0) {
+            	for (GardenItem item : newItems) {
+            		if (item instanceof Animal) {
+            			animals.add((Animal) item);
+            		}
+            		else if (item instanceof Plant) {
+            			plants.add((Plant) item);
+            		}
+            	}
             }
             Thread.sleep(1000);
         }
     }
+    
+
 
     // Garden helpers
     public static int getGardenHeight() { return GARDEN_HEIGHT; }
