@@ -171,6 +171,16 @@ public class Main {
     public static int randomInt(int minValue, int maxValue) {
         return minValue + (int)(Math.random() * (maxValue - minValue + 1));
     }
+    
+	/** Returns a random double between two values.
+	*  
+	*	@param double		minValue: the minimum number that can be returned.
+	*	@param double		maxValue: the maximum number that can be returned.
+	*	@return ->			double.	
+	*																														*/
+    public static double randomDouble(double minValue, double maxValue) {
+        return minValue + (Math.random() * (maxValue));
+    }
 
 /* ====================================================================================================================	*/
 

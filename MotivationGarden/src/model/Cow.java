@@ -9,14 +9,14 @@ public class Cow extends Animal {
 	// x and y position, imagePath (file path to image that GUI will draw)
 	
 	String type;
-	int moveChance;
+	double moveChance;
 	
 	public Cow(int x, int y) {
 		this.positionX = x;
 		this.positionY = y;
 		this.type = "cow";
-		this.moveChance = 3;
-		this.price = 15;
+		this.moveChance = 0.05;
+		this.price = 18;
 	}
 	
 	@Override
@@ -26,8 +26,8 @@ public class Cow extends Animal {
 	
 	@Override
     public void moveRandomly() {
-		int randomNumber = Main.randomInt(1, 10);
-		if ( randomNumber >= moveChance ) {
+		double randomNumber = Main.randomDouble(0, 1);
+		if ( randomNumber <= moveChance ) {
 			
 			int moveX = Main.randomInt(-1, 1);
 	        if (this.positionX + moveX >= 1 && this.positionX + moveX <= Main.getGardenWidth() ) {

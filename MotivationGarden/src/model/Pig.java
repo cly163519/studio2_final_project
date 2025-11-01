@@ -6,25 +6,25 @@ import util.Constants;
 public class Pig extends Animal {
 
 	String type;
-	int moveChance;
+	double moveChance;
 	
 	public Pig(int x, int y) {
 		this.positionX = x;
 		this.positionY = y;
 		this.type = "pig";
-		this.moveChance = 5;
-		this.price = 50;
+		this.moveChance = 0.1;
+		this.price = 18;
 	}
 	
 	@Override
     public String getImagePath() {
         return Constants.ANIMAL_IMAGE_DIR + this.type + ".png";
-	}
+    }
 	
 	@Override
     public void moveRandomly() {
-		int randomNumber = Main.randomInt(1, 10);
-		if ( randomNumber >= moveChance ) {
+		double randomNumber = Main.randomDouble(0, 1);
+		if ( randomNumber <= moveChance ) {
 			
 			int moveX = Main.randomInt(-1, 1);
 	        if (this.positionX + moveX >= 1 && this.positionX + moveX <= Main.getGardenWidth() ) {

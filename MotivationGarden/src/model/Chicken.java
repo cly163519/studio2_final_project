@@ -9,13 +9,13 @@ public class Chicken extends Animal {
 	// x and y position, imagePath (file path to image that GUI will draw)
 	
 	String type;
-	int moveChance;
+	double moveChance;
 	
 	public Chicken(int x, int y) {
 		this.positionX = x;
 		this.positionY = y;
 		this.type = "chicken";
-		this.moveChance = 8;
+		this.moveChance = 0.2;
 		this.price = 18;
 	}
 	
@@ -26,8 +26,8 @@ public class Chicken extends Animal {
 	
 	@Override
     public void moveRandomly() {
-		int randomNumber = Main.randomInt(1, 10);
-		if ( randomNumber >= moveChance ) {
+		double randomNumber = Main.randomDouble(0, 1);
+		if ( randomNumber <= moveChance ) {
 			
 			int moveX = Main.randomInt(-1, 1);
 	        if (this.positionX + moveX >= 1 && this.positionX + moveX <= Main.getGardenWidth() ) {
