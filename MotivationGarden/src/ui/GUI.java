@@ -125,8 +125,8 @@ public class GUI {
 			for (int j = 0 ; j < gardenWidth ; j ++) { // <- Draws a square, then moves to the right [gardenWidth] times
 				
 				// FIELDS FOR CONSTRUCTING THE TILE:
-				double xMin = x; // <- The minimum x and y values that cover this tile. This is so the mouse listener knows
-				double xMax = x+SPRITE_WIDTH; // when the mouse is hovering over a tile.
+				double xMin = x; // 			<-	The minimum x and y values that cover this tile. This is so the mouse listener knows
+				double xMax = x+SPRITE_WIDTH; // 	when the mouse is hovering over a tile.
 				double yMin = y;
 				double yMax = y+SPRITE_HEIGHT; 
 				int gridX = j+1; // <- Storing the x and y values that the gardenItem objects will use. This is so
@@ -241,9 +241,9 @@ public class GUI {
 				}
 			}
 			
-			// When the user clicks on a tile:
+			// When the user clicks within the grid:
 			if ( action.equals("pressed") ) {
-				if ( ITEM_BEING_PLACED != null ) { // <- Run this code if there's an item from the store ready to be placed and the user clicks
+				if ( ITEM_BEING_PLACED != null ) { // <- Only run this code if there's an item from the store ready to be placed and the user clicks
 					
 					int placementX = HOVERED_TILE.getGridX(); // <- Ask the hovered tile where this item should go
 					int placementY = HOVERED_TILE.getGridY(); //	on the grid.
@@ -308,7 +308,7 @@ public class GUI {
 				}
 			}
 		}
-		else IN_STORE = false; // <- Anywhere else on screen means the mouse is not in the store.
+		else IN_STORE = false; // <- Anywhere else on screen means the mouse is not in the store. This boolean is used by the drawStore function, which draws the store a bit differently if the mouse is currently over it.
 	}
 	
 	/// drawItem:
