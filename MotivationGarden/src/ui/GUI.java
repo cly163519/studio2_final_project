@@ -82,8 +82,8 @@ public class GUI {
 	}
 	
 	// DataController methods to save/load JSON files could run from here?
-	private void save() { /* save method here */ }
-	private void load() { /* load method here */ }
+	private void save() { /* save method here? */ }
+	private void load() { /* load method here? */ }
 	
 /* ====================================================================================================================	*/
 	
@@ -135,8 +135,6 @@ public class GUI {
 				Tile newTile = new Tile(x, y, xMin, xMax, yMin, yMax, gridX, gridY);
 				tiles.add(newTile); // <- Add the tile to an ArrayList so we can access it later.
 				
-				newTile.drawTile();
-				
 				x += SPRITE_WIDTH; // <- Move right before next loop
 				
 			}
@@ -152,15 +150,15 @@ public class GUI {
 	*																														*/
 	public static void createStore() {
 		
-		int x = STORE_GRID_LEFT; // <- Start drawing at the point set in fields.
+		int x = STORE_GRID_LEFT; // <- Start at the point on screen set in this class's fields.
 		int y = STORE_GRID_TOP;
 		
 		for (int i = 0 ; i < 5 ; i++) {
 			
-			double xMin = x;
+			double xMin = x; // <- Minimum and maximum x/y values that cover this tile. Used by mouse listener
 			double xMax = x+STORE_TILE_SIZE;
 			double yMin = y;
-			double yMax = y+STORE_TILE_SIZE; // <- Minimum and maximum x/y values that cover this tile. Used by mouse listener
+			double yMax = y+STORE_TILE_SIZE;
 			int id = i; // <- StoreTiles have an id based on the order they were made.
 			
 			GardenItem item = null; // <- item is assigned to the GardenObject it should sell based on what loop we're running
@@ -248,7 +246,7 @@ public class GUI {
 				if ( ITEM_BEING_PLACED != null ) { // <- Run this code if there's an item from the store ready to be placed and the user clicks
 					
 					int placementX = HOVERED_TILE.getGridX(); // <- Ask the hovered tile where this item should go
-					int placementY = HOVERED_TILE.getGridY(); //		on the grid.
+					int placementY = HOVERED_TILE.getGridY(); //	on the grid.
 					
 					// Check what kind of item it is and buy it at the appropriate place:
 					if ( ITEM_BEING_PLACED instanceof Flower ) { 
@@ -279,9 +277,9 @@ public class GUI {
 		// If the mouse is currently within the store grid, do these things:
 		if ( x > STORE_GRID_LEFT && x < STORE_GRID_WIDTH && y > STORE_GRID_TOP && y < STORE_GRID_TOP+STORE_TILE_SIZE) {
 			
-			IN_STORE = true; // <- Remember that the mouse is in the store. This is used by drawWorld() to draw the selected tile image.
+			IN_STORE = true; // <- Remembers that the mouse is in the store. While this = true, drawWorld will draw an icon over the store tile the mouse is hovering over.
 			
-			// Check which store tile the mouse is over, and set hoveredStoreTile to that store tile.
+			// Check which store tile the mouse is over, and set HOVERED_STORE_TILE to that store tile.
 			for (StoreTile storeTile : storeTiles) {
 				if ( storeTile.checkForHovered(x, y) ) {
 					HOVERED_STORE_TILE = storeTile;
@@ -297,7 +295,7 @@ public class GUI {
 				if ( price > StoreManager.getMoney() ) {  // <- Do this if the item is too expensive
 					try {
 						StoreCoin.turnRed(); // <- Coin turns red for 0.5 seconds
-					} catch (InterruptedException e) { // <- turnRed() has Thread.sleep, so we need this excpetion
+					} catch (InterruptedException e) { // <- turnRed() has Thread.sleep, so we need this exception
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
@@ -324,7 +322,7 @@ public class GUI {
 		int x = item.getPositionX();
 		int y = item.getPositionY();
 		if (x < 1 || x > Main.getGardenWidth() || y < 1 || y > Main.getGardenHeight()) {
-			UI.println("Item out of bounds!"); // <- If an item is outside of the world's bounds, don't draw it.
+			UI.println("Item out of bounds!"); // <- If an item is outside of the world's bounds, don't draw it. This shouldn't be possible with how the code is set up now, but just in case.
 		}
 		else {
 			if (sprite != null) { // <- If everything looks good, draw sprite on grid.
