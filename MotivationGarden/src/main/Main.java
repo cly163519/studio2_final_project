@@ -3,7 +3,7 @@ import java.util.ArrayList;
 import javax.swing.*;
 import ecs100.*;
 import manager.StoreManager;
-import manager.TaskManager; // ✅ added import for shared coin system
+import manager.TaskManager;
 import model.*;
 import ui.GUI;
 import ui.TodoPanel;
@@ -38,13 +38,21 @@ public class Main {
         StoreManager.init();         // sync StoreManager.money with TaskManager.money
 
         GUI gui = new GUI(); // <- Create GUI
-
-        // Add some initial items
-        animals.add(new Cow(3, 3));
-        animals.add(new Pig(3, 1));
-        animals.add(new Chicken(4, 10));
-        plants.add(new Flower(5, 2));
-        plants.add(new Tree(6, 5));
+        
+        // STARTING ITEMS:
+        plants.add(new Tree(randomInt(1, GARDEN_WIDTH), randomInt(1, GARDEN_HEIGHT))); // <- Spawn two trees somewhere random on the grid.
+        plants.add(new Tree(randomInt(1, GARDEN_WIDTH), randomInt(1, GARDEN_HEIGHT)));
+        plants.add(new Flower(randomInt(1, GARDEN_WIDTH), randomInt(1, GARDEN_HEIGHT))); // <- Spawn three flowers somewhere random on the grid.
+        plants.add(new Flower(randomInt(1, GARDEN_WIDTH), randomInt(1, GARDEN_HEIGHT))); 
+        plants.add(new Flower(randomInt(1, GARDEN_WIDTH), randomInt(1, GARDEN_HEIGHT))); 
+        // Randomly spawn either a cow, pig, or chicken to start:
+        int randomNumber = randomInt(1, 3);
+        switch (randomNumber) {
+        case 1: animals.add(new Cow(randomInt(1, GARDEN_WIDTH), randomInt(1, GARDEN_HEIGHT))); 		break;
+        case 2: animals.add(new Pig(randomInt(1, GARDEN_WIDTH), randomInt(1, GARDEN_HEIGHT))); 		break;
+        case 3: animals.add(new Chicken(randomInt(1, GARDEN_WIDTH), randomInt(1, GARDEN_HEIGHT))); 	break;
+        default: break;
+        }
 
         GUI.drawWorld();
 

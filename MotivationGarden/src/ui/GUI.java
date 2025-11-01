@@ -328,7 +328,10 @@ public class GUI {
 		}
 		else {
 			if (sprite != null) { // <- If everything looks good, draw sprite on grid.
-				UI.drawImage(sprite, getGUIX(x), getGUIY(y));
+				if (item instanceof Tree) {
+					UI.drawImage(sprite, getGUIX(x)-16, getGUIY(y)-60); // <- The tree is a bigger image, so draw it at a bit of an offset to make it look nice.
+				}
+				else UI.drawImage(sprite, getGUIX(x), getGUIY(y)); // <- Everything else draw normally
 			}
 			else { // <- If the item doesn't have a sprite, draw a red circle instead.
 				UI.setColor(Color.RED);

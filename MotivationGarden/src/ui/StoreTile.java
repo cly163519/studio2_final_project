@@ -27,8 +27,9 @@ public class StoreTile {
 	private int itemID;
 	private GardenItem item; // <- The StoreTile has an instance of the item it sells so it can get its properties
 	
-	private String sprite = "../MotivationGarden/resources/images/ui/storetile.png"; // <- For drawing the StoreTile UI
-	private String hoverSprite = "../MotivationGarden/resources/images/ui/storetile_highlight.png";
+	private static String sprite = "../MotivationGarden/resources/images/ui/storetile.png"; // <- For drawing the StoreTile UI
+	private static String hoverSprite = "../MotivationGarden/resources/images/ui/storetile_highlight.png";
+	private static String treeIcon = "../MotivationGarden/resources/images/ui/tree_store_icon.png"; // <- Tree in the store have a different sprite than the tree class
 
 //	Constructor:
 	public StoreTile(double x, double y, double xMin, double xMax, double yMin, double yMax, int id, GardenItem item) {
@@ -69,7 +70,7 @@ public class StoreTile {
 	*																														*/
 	public void drawTile() {
 		UI.drawImage(sprite, x, y);
-		if (item instanceof Tree) { /* Alternative tree sprite here */ }
+		if (item instanceof Tree) { UI.drawImage(treeIcon, x+16, y+16); } // <- If this is a Tree StoreTile, draw a different tree image than what the Tree class has
 		else UI.drawImage(item.getImagePath(), x+16, y+16);
 	}
 	
@@ -80,7 +81,7 @@ public class StoreTile {
 	*																														*/
 	public void drawHighlight() {
 		UI.drawImage(hoverSprite, x, y);
-		if (item instanceof Tree) { /* Alternative tree sprite here */ }
+		if (item instanceof Tree) { UI.drawImage(treeIcon, x+16, y+16); } // <- If this is a Tree StoreTile, draw a different tree image than what the Tree class has
 		else UI.drawImage(item.getImagePath(), x+16, y+16);
 	}
 	
