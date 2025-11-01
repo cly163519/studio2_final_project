@@ -4,6 +4,15 @@ import ecs100.UI;
 import model.GardenItem;
 import model.Tree;
 
+/* ====================================================================================================================	*/
+/**
+ * 	StoreTile: 			Tiles at the top of the screen that can be clicked on to buy items. Used by GUI.
+ *
+ * 	@version  			1.0
+ * 	@since    			1.0
+ */
+/* ====================================================================================================================	*/
+
 public class StoreTile {
 	
 //	Fields:
@@ -36,6 +45,8 @@ public class StoreTile {
 		this.item = item;
 		
 	}
+
+/* ====================================================================================================================	*/
 	
 	/// checkForHovered:
 	/** Checks if this tile is currently being hovered over by the mouse.
@@ -62,11 +73,18 @@ public class StoreTile {
 		else UI.drawImage(item.getImagePath(), x+16, y+16);
 	}
 	
+	/// drawHighlight:
+	/** Similar to drawTile, but draws the image shown when the mouse is over the tile instead.
+	*  
+	*	@return ->			N/A.	
+	*																														*/
 	public void drawHighlight() {
 		UI.drawImage(hoverSprite, x, y);
 		if (item instanceof Tree) { /* Alternative tree sprite here */ }
 		else UI.drawImage(item.getImagePath(), x+16, y+16);
 	}
+	
+	// GETTERS & SETTERS:
 	
 	public double getX() {
 		return x;

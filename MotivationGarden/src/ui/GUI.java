@@ -40,10 +40,10 @@ public class GUI {
 	private static int GARDEN_GRID_HEIGHT = SPRITE_HEIGHT*Main.getGardenHeight();
 	
 	// Store tiles configuration:
-	private static int STORE_TILE_COUNT = 6;
-	private static int STORE_TILE_SIZE = 64;
-	private static int STORE_GRID_TOP = GARDEN_GRID_TOP-((SPRITE_HEIGHT*6)-8);
-	private static int STORE_GRID_LEFT = GARDEN_GRID_LEFT;
+	private static int STORE_TILE_COUNT = 6; // <- This needs to be one higher than it actually is for some reason for the mouse listener to work. Not sure what's going on there but hey if it works it works.
+	private static int STORE_TILE_SIZE = 64; // <- Store tiles are 64x64p
+	private static int STORE_GRID_TOP = GARDEN_GRID_TOP-((SPRITE_HEIGHT*6)-8); // <- Draw store between garden and top of screen.
+	private static int STORE_GRID_LEFT = GARDEN_GRID_LEFT; // <- Use the same y-position as the garden.
 	private static int STORE_GRID_WIDTH = STORE_TILE_SIZE*STORE_TILE_COUNT;
 	
 //	Collections:
@@ -54,22 +54,22 @@ public class GUI {
 	private static ArrayList<StoreTile> storeTiles = new ArrayList<StoreTile>();
 	
 //	Class-Wide Variables:
-	private static Boolean showHighlight = false;
-	private static Boolean inStore = false;
-	private static Tile hoveredTile; // <- The tile currently being hovered over.
-	private static StoreTile hoveredStoreTile;
-	private static GardenItem itemBeingPlaced = null;
+	private static Boolean SHOW_HIGHLIGHT = false; // <- If this is true, the grid tile the mouse is over will be highlighted.
+	private static Boolean IN_STORE = false; // <- This gets set to true if the mouse is within the store's area. Used to draw either the normal image or the 'mouse over' image.
+	private static Tile HOVERED_TILE; // <- Will be set to tile currently being hovered over.
+	private static StoreTile HOVERED_STORE_TILE; // <- Will be set to the StoreTile currently being hovered over.
+	private static GardenItem ITEM_BEING_PLACED = null; // <- When the user is placing an item, stores what that item is until they click on the grid.
 
 //	Images:
-	private static String gardenImg = "../MotivationGarden/resources/images/ui/garden.png";
-	private static String barnImg = "../MotivationGarden/resources/images/ui/barn.png";
-	private static String backgroundImg = "../MotivationGarden/resources/images/ui/background.png";
+	private static String GARDEN_IMG = "../MotivationGarden/resources/images/ui/garden.png"; // <- Static images that are drawn every frame.
+	private static String BARN_IMG = "../MotivationGarden/resources/images/ui/barn.png";
+	private static String BACKGROUND_IMG = "../MotivationGarden/resources/images/ui/background.png";
 	
 //	Constructor
 	public GUI() {
 		
-		createGrid(Main.getGardenWidth(), Main.getGardenHeight()); // <- Draws the grid of tiles
-		createStore();
+		createGrid(Main.getGardenWidth(), Main.getGardenHeight()); // <- Creates the tiles arraylist
+		createStore(); // <- Creates the StoreTiles arraylist
 		convertXAndYValues(); // <- Fills the HashMaps with all x and y positions of the garden and their equivalent on the GUI. This is so the GUI knows where to draw an item from its x and y fields.
 		
 		UI.setMouseMotionListener(this::doMouse); // <- Create mouse listener
@@ -79,14 +79,12 @@ public class GUI {
 		UI.addButton("LOAD", UI::quit );
 		UI.addButton("QUIT", UI::quit );
 		
-		
 	}
 	
 /* ====================================================================================================================	*/
 	
-	
 	/// drawWorld:
-	/** Runs the GUI's draw methods on all gardenItems + static images that need to be on screen..
+	/** Runs the GUI's draw methods on all gardenItems + static images that need to be on screen. Called by main when the world updates.
 	*  
 	*	@return ->			N/A.	
 	*																														*/
@@ -99,14 +97,14 @@ public class GUI {
         for (GardenItem plant : Main.getPlants() ) {
             drawItem(plant);
         }
-        if (showHighlight && hoveredTile != null) {
-        	hoveredTile.drawHighlight();
+        if (SHOW_HIGHLIGHT && HOVERED_TILE != null) {
+        	HOVERED_TILE.drawHighlight();
         }
         drawStore();
     }
 	
 	/// createGrid:
-	/** Draws the tiles on screen and create a class containing that tile's properties.
+	/** Draws the tiles on screen and creates an instance of a class containing that tile's properties.
 	*  
 	*	@param int			gardenWidth: How many tiles will be drawn horizontally.
 	*	@param int			gardenHeight: How many vertical rows of tiles will be drawn.
@@ -143,9 +141,14 @@ public class GUI {
 		}	
 	}
 	
+	/// createStore:
+	/** Creates an arraylist of on-screen store tiles with their respective properties.
+	*  
+	*	@return ->			N/A.	
+	*																														*/
 	public static void createStore() {
 		
-		int x = STORE_GRID_LEFT;
+		int x = STORE_GRID_LEFT; // <- Start drawing at the point set in fields.
 		int y = STORE_GRID_TOP;
 		
 		for (int i = 0 ; i < 5 ; i++) {
@@ -153,13 +156,14 @@ public class GUI {
 			double xMin = x;
 			double xMax = x+STORE_TILE_SIZE;
 			double yMin = y;
-			double yMax = y+STORE_TILE_SIZE;
-			int id = i;
+			double yMax = y+STORE_TILE_SIZE; // <- Minimum and maximum x/y values that cover this tile. Used by mouse listener
+			int id = i; // <- StoreTiles have an id based on the order they were made.
 			
-			GardenItem item = null;
+			GardenItem item = null; // <- item is assigned to the GardenObject it should sell based on what loop we're running
 			switch (id) {
 			
-			case 0:  	item = 	new Flower(-1, -1); 	break;
+			// StoreTiles get the item they're selling as an argument, so they can get its sprite, price, etc.
+			case 0:  	item = 	new Flower(-1, -1); 	break; // <- Tile 1 gets flower , tile 2 gets Tree, etc
 			case 1: 	item = 	new Tree(-1, -1);		break;
 			case 2:		item = 	new Chicken(-1, -1);	break;
 			case 3:		item = 	new Pig(-1, -1);		break;
@@ -168,9 +172,9 @@ public class GUI {
 			
 			}
 			
-			storeTiles.add(new StoreTile(x, y, xMin, xMax, yMin, yMax, id, item));
+			storeTiles.add(new StoreTile(x, y, xMin, xMax, yMin, yMax, id, item)); // <- Add the new StoreTile to the list
 			
-			x+= STORE_TILE_SIZE;
+			x+= STORE_TILE_SIZE; // <- Move to the right and repeat.
 			
 		}
 		
@@ -183,9 +187,9 @@ public class GUI {
 	*																														*/
 	public static void drawStaticImages() {
 		
-		UI.drawImage(backgroundImg, 0, 0); // <- Background (water)
-		UI.drawImage(gardenImg, GARDEN_GRID_LEFT, GARDEN_GRID_TOP-(SPRITE_HEIGHT*3)); // <- Garden (grass)
-		UI.drawImage(barnImg, GARDEN_GRID_LEFT+GARDEN_GRID_WIDTH/2-64, GARDEN_GRID_TOP-(SPRITE_HEIGHT*3)); // <- Barn
+		UI.drawImage(BACKGROUND_IMG, 0, 0); // <- Background (water)
+		UI.drawImage(GARDEN_IMG, GARDEN_GRID_LEFT, GARDEN_GRID_TOP-(SPRITE_HEIGHT*3)); // <- Garden (grass)
+		UI.drawImage(BARN_IMG, GARDEN_GRID_LEFT+GARDEN_GRID_WIDTH/2-64, GARDEN_GRID_TOP-(SPRITE_HEIGHT*3)); // <- Barn
 		
 	}
 	
@@ -224,71 +228,86 @@ public class GUI {
 	*																														*/
 	private void doMouse(String action, double x, double y) {
 		
+		// GARDEN MOUSE ACTIONS:
+		
 		// If the mouse is currently within the garden grid, do these things:
 		if ( x > GARDEN_GRID_LEFT && x < GARDEN_GRID_LEFT+GARDEN_GRID_WIDTH && y > GARDEN_GRID_TOP && y < GARDEN_GRID_TOP+GARDEN_GRID_HEIGHT ) {
 			
 			// Check which tile the mouse is over, and set hoveredTile to that tile.
 			for (Tile tile : tiles) {
 				if ( tile.checkForHovered(x, y) ) {
-					hoveredTile = tile;
+					HOVERED_TILE = tile;
 				}
 			}
 			
 			// When the user clicks on a tile:
 			if ( action.equals("pressed") ) {
-				if ( itemBeingPlaced != null ) {
+				if ( ITEM_BEING_PLACED != null ) { // <- Run this code if there's an item from the store ready to be placed and the user clicks
 					
-					int placementX = hoveredTile.getGridX();
-					int placementY = hoveredTile.getGridY();
+					int placementX = HOVERED_TILE.getGridX(); // <- Ask the hovered tile where this item should go
+					int placementY = HOVERED_TILE.getGridY(); //		on the grid.
 					
-					if ( itemBeingPlaced instanceof Flower ) { 
+					// Check what kind of item it is and buy it at the appropriate place:
+					if ( ITEM_BEING_PLACED instanceof Flower ) { 
 						StoreManager.buyItem(new Flower(placementX, placementY)); 
 					}
-					else if ( itemBeingPlaced instanceof Tree ) { 
+					else if ( ITEM_BEING_PLACED instanceof Tree ) { 
 						StoreManager.buyItem(new Tree(placementX, placementY)); 
 					}
-					else if ( itemBeingPlaced instanceof Chicken ) { 
+					else if ( ITEM_BEING_PLACED instanceof Chicken ) { 
 						StoreManager.buyItem(new Chicken(placementX, placementY)); 
 					}
-					else if ( itemBeingPlaced instanceof Pig ) { 
+					else if ( ITEM_BEING_PLACED instanceof Pig ) { 
 						StoreManager.buyItem(new Pig(placementX, placementY)); 
 					}
-					else if ( itemBeingPlaced instanceof Cow ) { 
+					else if ( ITEM_BEING_PLACED instanceof Cow ) { 
 						StoreManager.buyItem(new Cow(placementX, placementY)); 
 					}
 					
-					showHighlight = false;
-					itemBeingPlaced = null;
+					SHOW_HIGHLIGHT = false; // <- Stop highlighting tiles and set itemBeingPlaced back to null
+					ITEM_BEING_PLACED = null;
 					
 				}
 			}
-			
 		}
+		
+		// STORE MOUSE ACTIONS:
 		
 		// If the mouse is currently within the store grid, do these things:
 		if ( x > STORE_GRID_LEFT && x < STORE_GRID_WIDTH && y > STORE_GRID_TOP && y < STORE_GRID_TOP+STORE_TILE_SIZE) {
 			
-			inStore = true;
+			IN_STORE = true; // <- Remember that the mouse is in the store. This is used by drawWorld() to draw the selected tile image.
 			
 			// Check which store tile the mouse is over, and set hoveredStoreTile to that store tile.
 			for (StoreTile storeTile : storeTiles) {
 				if ( storeTile.checkForHovered(x, y) ) {
-					hoveredStoreTile = storeTile;
+					HOVERED_STORE_TILE = storeTile;
 				}
 			}
 			
 			// When the user clicks on a store tile:
 			if ( action.equals("pressed") ) {
-				GardenItem itemBeingBought = hoveredStoreTile.getItem();
-				int price = itemBeingBought.getPrice();
-				if ( price > StoreManager.getMoney() ) { UI.println("Can't afford"); }
+				GardenItem itemBeingBought = HOVERED_STORE_TILE.getItem(); // <- Ask the hovered store tile what item it sells
+				int price = itemBeingBought.getPrice(); // <- Check the price and see if it can be bought
+				
+				// If the user doesn't have enough money:
+				if ( price > StoreManager.getMoney() ) {  // <- Do this if the item is too expensive
+					try {
+						StoreCoin.turnRed(); // <- Coin turns red for 0.5 seconds
+					} catch (InterruptedException e) { // <- turnRed() has Thread.sleep, so we need this excpetion
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+				
+				// If they can afford it:
 				else {
-					itemBeingPlaced = itemBeingBought;
-					showHighlight = true;
+					ITEM_BEING_PLACED = itemBeingBought; // <- Remember the item and place it when the user clicks the grid.
+					SHOW_HIGHLIGHT = true; // <- Highlight the tile being hovered over on the grid until the item is placed.
 				}
 			}
 		}
-		else inStore = false;
+		else IN_STORE = false; // <- Anywhere else on screen means the mouse is not in the store.
 	}
 	
 	/// drawItem:
@@ -315,15 +334,22 @@ public class GUI {
 		}
 	}
 	
+	/// drawStore:
+	/** Draws all the StoreTiles as well as the coin icon / total money on screen. Used by drawWorld()
+	*  
+	*	@return ->			N/A.	
+	*																														*/
 	public static void drawStore() {
 		
 		for (StoreTile storeTile : storeTiles) {
-			UI.drawString("$ "+storeTile.getItem().getPrice(), storeTile.getX()+16, storeTile.getY()-10);
-			if (storeTile == hoveredStoreTile && inStore) {
-				storeTile.drawHighlight();
+			UI.drawString("$ "+storeTile.getItem().getPrice(), storeTile.getX()+16, storeTile.getY()-10); // <- Draw the item's price
+			if (storeTile == HOVERED_STORE_TILE && IN_STORE) { // <- If the mouse is in the store area, check which
+				storeTile.drawHighlight(); //					should be highlighted by the mouse and draw a different image.
 			}
 			else storeTile.drawTile();
 		}
+		// Draw the coin a bit further to the left than where the garden grid ends, and at the same y-position as the store
+		StoreCoin.drawCoin(GARDEN_GRID_LEFT+GARDEN_GRID_WIDTH-112, STORE_GRID_TOP);
 		
 	}
 	
@@ -346,15 +372,5 @@ public class GUI {
 	public static int getGUIY(int y) {
 		return GUIyValues.get(y);
 	}
-	
-	// TEMPORARY METHODS (These are just here for testing):
-	public void clearAll() {
-		UI.clearGraphics();
-	}
-	public void drawCow() {
-		int x = UI.askInt("X position: ");
-		int y = UI.askInt("Y position: ");
-		Cow cow = new Cow(x, y);
-		drawItem(cow);
-	}	
+
 }

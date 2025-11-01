@@ -33,7 +33,6 @@ public class StoreManager {
     public static boolean buyItem(GardenItem item) {
         if (canBuy(item)) {
             TaskManager.addCoins(-item.getPrice()); // deduct shared coins
-            money-= item.getPrice();
             Main.addToWorld(item);
             return true;
         }
