@@ -15,10 +15,8 @@ import model.GardenItem;
  * 	@version  			1.0
  * 	@since    			1.0
  * 
- * test changes
  */
 /* ====================================================================================================================	*/
-
 
 public class GUI {
 
@@ -28,12 +26,16 @@ public class GUI {
 	private static int SPRITE_HEIGHT = 32;
 	
 	// Top and left of the grid:
-	private static int GARDEN_GRID_TOP = 32*7; // <- Top and left where the garden grid should be drawn
-	private static int GARDEN_GRID_LEFT = 32*3;
+	private static int GARDEN_GRID_TOP = SPRITE_HEIGHT*7; // <- Top and left where the garden grid should be drawn
+	private static int GARDEN_GRID_LEFT = SPRITE_WIDTH*3;
 	
 	// For methods that need to know the total height and width of the garden:
 	private static int GARDEN_GRID_WIDTH = SPRITE_WIDTH*Main.getGardenWidth(); // <- Total width and height of the whole grid. This is for checking if the mouse is hovering over the grid.
 	private static int GARDEN_GRID_HEIGHT = SPRITE_HEIGHT*Main.getGardenHeight();
+	
+	// Store tiles configuration:
+	private static int STORE_GRID_TOP = GARDEN_GRID_TOP-(SPRITE_HEIGHT*6);
+	private static int STORE_GRID_LEFT = GARDEN_GRID_LEFT;
 	
 //	Collections:
 	private static HashMap<Integer, Integer> GUIxValues = new HashMap<Integer, Integer>(); // <- Converts X and Y values to scaled up co-ords of where those images should be drawn the on-screen grid.
@@ -110,6 +112,23 @@ public class GUI {
 		}	
 	}
 	
+	public static void createStore() {
+		
+		int x = STORE_GRID_LEFT;
+		int y = STORE_GRID_TOP;
+		
+		for (int i = 0 ; i < 5 ; i++) {
+			UI.drawRect(x, y, SPRITE_WIDTH*2, SPRITE_HEIGHT*2);
+			x += SPRITE_WIDTH*2;
+		}
+		
+	}
+	
+	/// drawStaticImages: 
+	/** Draws static images on screen that will not move (background, barn, etc).
+	*  
+	*	@return ->			N/A.	
+	*																														*/
 	public static void drawStaticImages() {
 		
 		UI.drawImage(backgroundImg, 0, 0);
@@ -168,7 +187,7 @@ public class GUI {
 			// When the user clicks on a tile:
 			if ( action.equals("pressed") ) {
 				UI.println("X Position: "+x+". Y Position: "+y+".");
-				drawItem(new Cow(hoveredTile.getGridX(), hoveredTile.getGridY()));
+				Main.addToWorld(new Cow(hoveredTile.getGridX(), hoveredTile.getGridY()));
 			}
 			
 		}

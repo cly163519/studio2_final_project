@@ -1,14 +1,22 @@
 package main;
-
 import java.util.ArrayList;
 import javax.swing.*;
-
 import ecs100.*;
 import manager.StoreManager;
 import manager.TaskManager; // ✅ added import for shared coin system
 import model.*;
 import ui.GUI;
 import ui.TodoPanel;
+
+/* ====================================================================================================================	*/
+/**
+ * 	Main: 				Launches program and handles logic shared across classes.
+ *
+ * 	@version  			1.0
+ * 	@since    			1.0
+ * 
+ */
+/* ====================================================================================================================	*/
 
 public class Main {
 
@@ -50,7 +58,7 @@ public class Main {
             todoFrame.setVisible(true);
         });
 
-        updateWorld(1); // <- Start updating farm continuously.
+        updateWorld(12); // <- Start updating farm continuously.
     }
 
 /* ====================================================================================================================	*/
@@ -90,6 +98,7 @@ public class Main {
 	*																														*/
     public void drawWorld() {
     	GUI.drawStaticImages();
+    	GUI.createStore();
         for (GardenItem animal : animals) {
             GUI.drawItem(animal);
         }
@@ -125,6 +134,15 @@ public class Main {
             Thread.sleep(1000/frameRate); // <- Repeat after 1/frameRate seconds.
         }
     }
+    
+	/** Adds a garden item to the newItems list. UpdateWorld will place it in the world after the next update.
+	*  
+	*	@param GardenItem	item: Item to be added to database.
+	*	@return ->			N/A.	
+	*																														*/
+	public static void addToWorld(GardenItem item) {
+		newItems.add(item);
+	}
     
 	/** Returns the garden's height.
 	*  
