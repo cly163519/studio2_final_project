@@ -27,7 +27,7 @@ import model.Tree;
 public class GUI {
 
 //	Fields:
-	// For methods that needs to know how big the sprites are (32x32px):
+	// For methods that needs to know how big the sprites (images) are (32x32px):
 	private static int SPRITE_WIDTH = 32; // <- Sprites will all be standardized to 32x32px in Photoshop
 	private static int SPRITE_HEIGHT = 32;
 	
@@ -43,7 +43,7 @@ public class GUI {
 	private static int STORE_TILE_COUNT = 6; // <- This needs to be one higher than it actually is for some reason for the mouse listener to work. Not sure what's going on there but hey if it works it works.
 	private static int STORE_TILE_SIZE = 64; // <- Store tiles are 64x64p
 	private static int STORE_GRID_TOP = GARDEN_GRID_TOP-((SPRITE_HEIGHT*6)-8); // <- Draw store between garden and top of screen.
-	private static int STORE_GRID_LEFT = GARDEN_GRID_LEFT; // <- Use the same y-position as the garden.
+	private static int STORE_GRID_LEFT = GARDEN_GRID_LEFT; // <- Use the same x-position as the garden.
 	private static int STORE_GRID_WIDTH = STORE_TILE_SIZE*STORE_TILE_COUNT;
 	
 //	Collections:
@@ -51,14 +51,14 @@ public class GUI {
 	private static HashMap<Integer, Integer> GUIyValues = new HashMap<Integer, Integer>();
 
 	private static ArrayList<Tile> tiles = new ArrayList<Tile>(); // <- Each square belongs to a 'tile' class. This is so the x and y position of tile the mouse is over can be stored and accessed.
-	private static ArrayList<StoreTile> storeTiles = new ArrayList<StoreTile>();
+	private static ArrayList<StoreTile> storeTiles = new ArrayList<StoreTile>(); // <- The store tiles work similarly. They also have the item they sell stored as a field.
 	
 //	Class-Wide Variables:
 	private static Boolean SHOW_HIGHLIGHT = false; // <- If this is true, the grid tile the mouse is over will be highlighted.
 	private static Boolean IN_STORE = false; // <- This gets set to true if the mouse is within the store's area. Used to draw either the normal image or the 'mouse over' image.
 	private static Tile HOVERED_TILE; // <- Will be set to tile currently being hovered over.
 	private static StoreTile HOVERED_STORE_TILE; // <- Will be set to the StoreTile currently being hovered over.
-	private static GardenItem ITEM_BEING_PLACED = null; // <- When the user is placing an item, stores what that item is until they click on the grid to place it.
+	private static GardenItem ITEM_BEING_PLACED = null; // <- When the user is placing an item, store what that item is until they click on the grid to place it.
 
 //	Images:
 	private static String GARDEN_IMG = "../MotivationGarden/resources/images/ui/garden.png"; // <- Static images that are drawn every frame.
@@ -81,7 +81,7 @@ public class GUI {
 		
 	}
 	
-	// DataController methods to save/load JSON files could run from here?
+	// DataController methods to save/load JSON files could be called from here?
 	private void save() { /* save method here? */ }
 	private void load() { /* load method here? */ }
 	
@@ -108,7 +108,7 @@ public class GUI {
     }
 	
 	/// createGrid:
-	/** Draws the tiles on screen and creates an instance of a class containing that tile's properties.
+	/** Draws the tiles on screen and creates an instance of a class containing that tile's properties. Called once when GUI is created.
 	*  
 	*	@param int			gardenWidth: How many tiles will be drawn horizontally.
 	*	@param int			gardenHeight: How many vertical rows of tiles will be drawn.
@@ -144,7 +144,7 @@ public class GUI {
 	}
 	
 	/// createStore:
-	/** Creates an arraylist of on-screen store tiles with their respective properties.
+	/** Creates an arraylist of on-screen store tiles with their respective properties. Called once when GUI is created.
 	*  
 	*	@return ->			N/A.	
 	*																														*/
@@ -182,7 +182,7 @@ public class GUI {
 	}
 	
 	/// drawStaticImages: 
-	/** Draws static images on screen that will not move (background, barn, etc).
+	/** Draws static images on screen that will not move (background, barn, etc). Called every time the world is drawn.
 	*  
 	*	@return ->			N/A.	
 	*																														*/
@@ -220,7 +220,7 @@ public class GUI {
 	}
 	
 	/// doMouse:
-	/** The mouse listener for doing all things mouse-related.
+	/** The mouse listener for doing all things mouse-related. The first part is for the garden grid, the second is for the store grid.
 	*  
 	*	@param String		Action: tracks mouse clicks, etc.			
 	*	@param double		x: Mouse position x
@@ -312,7 +312,7 @@ public class GUI {
 	}
 	
 	/// drawItem:
-	/** Any GardenItem can be drawn on the screen by passing it through this method. It's based on the GardenItem's x and y fields.
+	/** Any GardenItem can be drawn on the screen by passing it through this method. It takes the GardenItem's x and y fields and turns that into x and y positions on screen using the HashMaps.
 	*  
 	*	@param GardenItem	GardenItem: This GardenItem's sprite will be drawn where it belongs on the grid (decided by x and y)
 	*	@return ->			N/A.	
