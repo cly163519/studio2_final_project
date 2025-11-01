@@ -16,7 +16,7 @@ public class Chicken extends Animal {
 		this.positionY = y;
 		this.type = "chicken";
 		this.moveChance = 0.2;
-		this.price = 18;
+		this.price = 15;
 	}
 	
 	@Override

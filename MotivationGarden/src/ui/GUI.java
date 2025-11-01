@@ -58,7 +58,7 @@ public class GUI {
 	private static Boolean IN_STORE = false; // <- This gets set to true if the mouse is within the store's area. Used to draw either the normal image or the 'mouse over' image.
 	private static Tile HOVERED_TILE; // <- Will be set to tile currently being hovered over.
 	private static StoreTile HOVERED_STORE_TILE; // <- Will be set to the StoreTile currently being hovered over.
-	private static GardenItem ITEM_BEING_PLACED = null; // <- When the user is placing an item, stores what that item is until they click on the grid.
+	private static GardenItem ITEM_BEING_PLACED = null; // <- When the user is placing an item, stores what that item is until they click on the grid to place it.
 
 //	Images:
 	private static String GARDEN_IMG = "../MotivationGarden/resources/images/ui/garden.png"; // <- Static images that are drawn every frame.
@@ -75,11 +75,15 @@ public class GUI {
 		UI.setMouseMotionListener(this::doMouse); // <- Create mouse listener
 		
 		// UI Buttons:
-		UI.addButton("SAVE", UI::quit );
-		UI.addButton("LOAD", UI::quit );
+		UI.addButton("SAVE", this::save);
+		UI.addButton("LOAD", this::load);
 		UI.addButton("QUIT", UI::quit );
 		
 	}
+	
+	// DataController methods to save/load JSON files could run from here?
+	private void save() { /* save method here */ }
+	private void load() { /* load method here */ }
 	
 /* ====================================================================================================================	*/
 	
@@ -169,7 +173,6 @@ public class GUI {
 			case 3:		item = 	new Pig(-1, -1);		break;
 			case 4:		item = 	new Cow(-1, -1);		break;
 			default: break;
-			
 			}
 			
 			storeTiles.add(new StoreTile(x, y, xMin, xMax, yMin, yMax, id, item)); // <- Add the new StoreTile to the list

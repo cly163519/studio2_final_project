@@ -32,7 +32,7 @@ public class TaskManager {
         for (Task t : tasks) {
             if (t.getTitle().equalsIgnoreCase(title) && !t.isCompleted()) {
                 t.setCompleted(true);
-                money += 5; // reward coins
+                money += 20; // reward coins
             }
         }
         notifyListeners();
