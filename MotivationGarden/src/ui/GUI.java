@@ -5,6 +5,7 @@ import java.util.HashMap;
 
 import ecs100.*;
 import main.Main;
+import manager.StoreManager;
 import model.Animal;
 import model.Chicken;
 import model.Cow;
@@ -53,8 +54,10 @@ public class GUI {
 	private static ArrayList<StoreTile> storeTiles = new ArrayList<StoreTile>();
 	
 //	Class-Wide Variables:
+	Boolean showHighlight = false;
 	Tile hoveredTile; // <- The tile currently being hovered over.
 	StoreTile hoveredStoreTile;
+	GardenItem itemBeingPlaced = null;
 
 //	Images:
 	static String gardenImg = "../MotivationGarden/resources/images/ui/garden.png";
@@ -223,7 +226,30 @@ public class GUI {
 			// When the user clicks on a tile:
 			if ( action.equals("pressed") ) {
 				UI.println("X Position: "+x+". Y Position: "+y+".");
-				Main.addToWorld(new Cow(hoveredTile.getGridX(), hoveredTile.getGridY()));
+				if ( itemBeingPlaced != null ) {
+					
+					int placementX = hoveredTile.getGridX();
+					int placementY = hoveredTile.getGridY();
+					
+					if ( itemBeingPlaced instanceof Flower ) { 
+						StoreManager.buyItem(new Flower(placementX, placementY)); 
+					}
+					else if ( itemBeingPlaced instanceof Tree ) { 
+						StoreManager.buyItem(new Tree(placementX, placementY)); 
+					}
+					else if ( itemBeingPlaced instanceof Chicken ) { 
+						StoreManager.buyItem(new Chicken(placementX, placementY)); 
+					}
+					else if ( itemBeingPlaced instanceof Pig ) { 
+						StoreManager.buyItem(new Pig(placementX, placementY)); 
+					}
+					else if ( itemBeingPlaced instanceof Cow ) { 
+						StoreManager.buyItem(new Cow(placementX, placementY)); 
+					}
+					
+					itemBeingPlaced = null;
+					
+				}
 			}
 			
 		}
@@ -243,23 +269,11 @@ public class GUI {
 			// When the user clicks on a store tile:
 			if ( action.equals("pressed") ) {
 				GardenItem itemBeingBought = hoveredStoreTile.getItem();
-				int newItemXPosition = 1;
-				int newItemYPosition = 1;
-				
-				if ( itemBeingBought instanceof Flower ) { 
-					Main.addToWorld(new Flower(newItemXPosition, newItemYPosition)); 
-				}
-				else if ( itemBeingBought instanceof Tree ) { 
-					Main.addToWorld(new Tree(newItemXPosition, newItemYPosition)); 
-				}
-				else if ( itemBeingBought instanceof Chicken ) { 
-					Main.addToWorld(new Chicken(newItemXPosition, newItemYPosition)); 
-				}
-				else if ( itemBeingBought instanceof Pig ) { 
-					Main.addToWorld(new Pig(newItemXPosition, newItemYPosition)); 
-				}
-				else if ( itemBeingBought instanceof Cow ) { 
-					Main.addToWorld(new Cow(newItemXPosition, newItemYPosition)); 
+				int price = itemBeingBought.getPrice();
+				if ( price > StoreManager.getMoney() ) { UI.println("Can't afford"); }
+				else {
+					itemBeingPlaced = itemBeingBought;
+					showHighlight = true;
 				}
 				
 			}

@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.ArrayList;
 
 import datacontroller.StoreDataController;
+import main.Main;
 import model.GardenItem;
 import model.StoreItem;
 
@@ -32,6 +33,8 @@ public class StoreManager {
     public static boolean buyItem(GardenItem item) {
         if (canBuy(item)) {
             TaskManager.addCoins(-item.getPrice()); // deduct shared coins
+            money-= item.getPrice();
+            Main.addToWorld(item);
             return true;
         }
         return false;
