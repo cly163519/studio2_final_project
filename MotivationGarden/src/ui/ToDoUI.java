@@ -17,10 +17,16 @@ import util.Constants;
  */
 public class ToDoUI {
 
+
     /**
      * Ensure default tasks exist in the system
      * Creates predefined tasks for each category if they don't already exist
      */
+	
+	
+	/* DELETE THIS LINE TO RESTORE CODE [START]
+	
+	
     public static void ensureDefaultTasks() {
         Map<String, CategoryDefinition> categories = buildCategories();
 
@@ -38,12 +44,21 @@ public class ToDoUI {
             }
         }));
     }
+    
+    
+    DELETE THIS LINE TO RESTORE CODE [END] */
 
+	
     /**
      * Get display name for a category
      * @param category Category key
      * @return Display name with emoji
      */
+	
+	
+	/* DELETE THIS LINE TO RESTORE CODE [START]
+	
+	
     public static String getCategoryDisplayName(String category) {
         switch (category) {
             case Constants.CATEGORY_EASY_WINS:
@@ -60,11 +75,18 @@ public class ToDoUI {
                 return category;
         }
     }
-
+	
+	
+	/* DELETE THIS LINE TO RESTORE CODE [END]
+	
+	
     /**
      * Build category definitions with default tasks
      * @return Map of category key to CategoryDefinition
      */
+	
+	/* DELETE THIS LINE TO RESTORE CODE [START]
+
     private static Map<String, CategoryDefinition> buildCategories() {
         Map<String, CategoryDefinition> map = new LinkedHashMap<>();
 
@@ -120,10 +142,15 @@ public class ToDoUI {
 
         return map;
     }
+    
+    DELETE THIS LINE TO RESTORE CODE [END] */
 
     /**
      * Internal class to hold category definitions
      */
+	
+	/* DELETE THIS LINE TO RESTORE CODE [START]
+	
     private static class CategoryDefinition {
         private final String key;
         private final String displayName;
@@ -147,4 +174,8 @@ public class ToDoUI {
             return items;
         }
     }
+    
+   	DELETE THIS LINE TO RESTORE CODE [START] */
+    
+    
 }

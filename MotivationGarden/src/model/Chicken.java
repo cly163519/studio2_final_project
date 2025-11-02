@@ -9,7 +9,7 @@ public class Chicken extends Animal {
 	// x and y position, imagePath (file path to image that GUI will draw)
 	
 	//String type;
-	int moveChance;
+	double moveChance;
 	
 	public Chicken(int x, int y) {
 		this.positionX = x;

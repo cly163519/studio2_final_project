@@ -6,7 +6,7 @@ import util.Constants;
 public class Pig extends Animal {
 
 	//String type;
-	int moveChance;
+	double moveChance;
 	
 	public Pig(int x, int y) {
 		this.positionX = x;
