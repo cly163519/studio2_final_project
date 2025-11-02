@@ -3,11 +3,6 @@ package manager;
 import model.Task;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.ArrayList;
-import java.util.Comparator;
-
-import java.util.Objects;
-import java.util.stream.Collectors;
 
 public class TaskManager {
 
@@ -23,8 +18,8 @@ public class TaskManager {
         return money;
     }
 
-    public static void addTask(String title) {
-        tasks.add(new Task(title));
+    public static void addTask(String title, String category) {
+        tasks.add(new Task(title, category));
         notifyListeners();
     }
 
@@ -37,7 +32,7 @@ public class TaskManager {
         for (Task t : tasks) {
             if (t.getTitle().equalsIgnoreCase(title) && !t.isCompleted()) {
                 t.setCompleted(true);
-                money += 20; // reward coins
+                money += 5; // reward coins
             }
         }
         notifyListeners();
@@ -56,9 +51,9 @@ public class TaskManager {
             r.run();
         }
     }
+
     public static void addCoins(int amount) {
         money += amount;
-        notifyListeners(); // update any UI (TodoPanel or StoreManager listener)
+        notifyListeners();
     }
 }
-
