@@ -8,8 +8,8 @@ public class Cow extends Animal {
 	// PROTECTED FIELDS INHERITED FROM 'ITEM':
 	// x and y position, imagePath (file path to image that GUI will draw)
 	
-	String type;
-	double moveChance;
+	//String type;
+	int moveChance;
 	
 	public Cow(int x, int y) {
 		this.positionX = x;

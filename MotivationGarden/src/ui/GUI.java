@@ -2,6 +2,7 @@ package ui;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import ecs100.*;
 import main.Main;
@@ -30,7 +31,7 @@ public class GUI {
 	// For methods that needs to know how big the sprites (images) are (32x32px):
 	private static int SPRITE_WIDTH = 32; // <- Sprites will all be standardized to 32x32px in Photoshop
 	private static int SPRITE_HEIGHT = 32;
-	
+
 	// Top and left of the grid:
 	private static int GARDEN_GRID_TOP = SPRITE_HEIGHT*7; // <- Top and left where the garden grid should be drawn
 	private static int GARDEN_GRID_LEFT = SPRITE_WIDTH*3;
@@ -71,7 +72,7 @@ public class GUI {
 		createGrid(Main.getGardenWidth(), Main.getGardenHeight()); // <- Creates the tiles arraylist
 		createStore(); // <- Creates the StoreTiles arraylist
 		convertXAndYValues(); // <- Fills the HashMaps with all x and y positions of the garden and their equivalent on the GUI. This is so the GUI knows where to draw an item from its x and y fields.
-		
+
 		UI.setMouseMotionListener(this::doMouse); // <- Create mouse listener
 		
 		// UI Buttons:
@@ -112,10 +113,10 @@ public class GUI {
 	*  
 	*	@param int			gardenWidth: How many tiles will be drawn horizontally.
 	*	@param int			gardenHeight: How many vertical rows of tiles will be drawn.
-	*	@return ->			N/A.	
+	*	@return ->			N/A.
 	*																														*/
 	public static void createGrid(int gardenWidth, int gardenHeight) {
-		
+
 		int x = GARDEN_GRID_LEFT; // <- Initial X and Y positions for the grid
 		int y = GARDEN_GRID_TOP;
 		
@@ -123,24 +124,24 @@ public class GUI {
 		
 		for (int i = 0 ; i < gardenHeight ; i++) { // <- Draws a row, then move down by the height of the sprite [gardenWidth] times
 			for (int j = 0 ; j < gardenWidth ; j ++) { // <- Draws a square, then moves to the right [gardenWidth] times
-				
+
 				// FIELDS FOR CONSTRUCTING THE TILE:
 				double xMin = x; // 			<-	The minimum x and y values that cover this tile. This is so the mouse listener knows
 				double xMax = x+SPRITE_WIDTH; // 	when the mouse is hovering over a tile.
 				double yMin = y;
-				double yMax = y+SPRITE_HEIGHT; 
+				double yMax = y+SPRITE_HEIGHT;
 				int gridX = j+1; // <- Storing the x and y values that the gardenItem objects will use. This is so
 				int gridY = i+1; // we know which tile is at which place in the grid.
-				
+
 				Tile newTile = new Tile(x, y, xMin, xMax, yMin, yMax, gridX, gridY);
 				tiles.add(newTile); // <- Add the tile to an ArrayList so we can access it later.
 				
 				x += SPRITE_WIDTH; // <- Move right before next loop
-				
+
 			}
 			x = GARDEN_GRID_LEFT; // <- Move back to far left
 			y += SPRITE_HEIGHT; // <- Move down before next loop
-		}	
+		}
 	}
 	
 	/// createStore:
@@ -196,36 +197,36 @@ public class GUI {
 	
 	/// convertXAndYValues:
 	/** Takes all the valid x and y values of the grid and converts them into where we want them to be drawn on the screen. These are stored in HashMaps that we can use to do the conversion whenever we need it.
-	*  
-	*	@param N/A			
-	*	@return ->			N/A.	
+	*
+	*	@param N/A
+	*	@return ->			N/A.
 	*																														*/
 	private static void convertXAndYValues() {
-		
+
 		int GUIX = GARDEN_GRID_LEFT; // <- x1 and y1 will be assigned to the wherever the top and left of the grid is.
 		int GUIY = GARDEN_GRID_TOP;
-		
+
 		// Convert X:
 		for (int i = 1 ; i <= Main.getGardenWidth(); i++) {
 			GUIxValues.put(i, GUIX); // <- Put i and the place we want to draw items in the HashMap.
 			GUIX += SPRITE_WIDTH; // <- Move left by the width of the image before looping again.
 		}
-		
+
 		//Convert Y:
 		for (int i = 1 ; i <= Main.getGardenHeight(); i++) {
 			GUIyValues.put(i, GUIY);
 			GUIY += SPRITE_HEIGHT;
 		}
-		
+
 	}
-	
+
 	/// doMouse:
 	/** The mouse listener for doing all things mouse-related. The first part is for the garden grid, the second is for the store grid.
 	*  
 	*	@param String		Action: tracks mouse clicks, etc.			
 	*	@param double		x: Mouse position x
 	*	@param double		y: Mouse position y
-	*	@return ->			N/A.	
+	*	@return ->			N/A.
 	*																														*/
 	private void doMouse(String action, double x, double y) {
 		
@@ -233,7 +234,7 @@ public class GUI {
 		
 		// If the mouse is currently within the garden grid, do these things:
 		if ( x > GARDEN_GRID_LEFT && x < GARDEN_GRID_LEFT+GARDEN_GRID_WIDTH && y > GARDEN_GRID_TOP && y < GARDEN_GRID_TOP+GARDEN_GRID_HEIGHT ) {
-			
+
 			// Check which tile the mouse is over, and set hoveredTile to that tile.
 			for (Tile tile : tiles) {
 				if ( tile.checkForHovered(x, y) ) {
@@ -310,12 +311,12 @@ public class GUI {
 		}
 		else IN_STORE = false; // <- Anywhere else on screen means the mouse is not in the store. This boolean is used by the drawStore function, which draws the store a bit differently if the mouse is currently over it.
 	}
-	
+
 	/// drawItem:
 	/** Any GardenItem can be drawn on the screen by passing it through this method. It takes the GardenItem's x and y fields and turns that into x and y positions on screen using the HashMaps.
 	*  
 	*	@param GardenItem	GardenItem: This GardenItem's sprite will be drawn where it belongs on the grid (decided by x and y)
-	*	@return ->			N/A.	
+	*	@return ->			N/A.
 	*																														*/
 	public static void drawItem(GardenItem item) {
 		String sprite = item.getImagePath();
@@ -359,22 +360,32 @@ public class GUI {
 	
 	/// getGUIX:
 	/** Takes an x value and returns where it should be drawn on screen.
-	*  
+	*
 	*	@param int			x: The x value on the grid where the item should be drawn.
-	*	@return ->			N/A.	
+	*	@return ->			int: The GUI x coordinate, or -1 if invalid.
 	*																														*/
 	public static int getGUIX(int x) {
-		return GUIxValues.get(x);
+		Integer result = GUIxValues.get(x);
+		if (result == null) {
+			UI.println("Error: Invalid X coordinate: " + x);
+			return -1;
+		}
+		return result;
 	}
-	
+
 	/// getGUIY:
 	/** Takes an y value and returns where it should be drawn on screen.
-	*  
+	*
 	*	@param int			y: The y value on the grid where the item should be drawn.
-	*	@return ->			N/A.	
+	*	@return ->			int: The GUI y coordinate, or -1 if invalid.
 	*																														*/
 	public static int getGUIY(int y) {
-		return GUIyValues.get(y);
+		Integer result = GUIyValues.get(y);
+		if (result == null) {
+			UI.println("Error: Invalid Y coordinate: " + y);
+			return -1;
+		}
+		return result;
 	}
 
 }
