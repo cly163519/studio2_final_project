@@ -1,46 +1,50 @@
 package manager;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.ArrayList;
 
+import datacontroller.StoreDataController;
+import main.Main;
 import model.GardenItem;
 import model.StoreItem;
-import datacontroller.StoreDataController;
 
 public class StoreManager {
 
-	private static List<StoreItem> storeItems;
-	private static int money;
+    private static List<StoreItem> storeItems;
+    private static int money;
 
-	public static void init() {
-		storeItems = StoreDataController.loadStoreItems(); // load from file
-		if (storeItems == null) {
-			storeItems = new ArrayList<>(); // if no file, create new  
-		}
-	}
+    public static void init() {
+        storeItems = StoreDataController.loadStoreItems();
+        if (storeItems == null) {
+            storeItems = new ArrayList<>();
+        }
 
-	private static List<StoreItem> getAllStoreItems() {
-		return null;
-	}
+        // Initialize money from TaskManager
+        money = TaskManager.getCoins();
 
-	/**
-	 * Buy an item from the shop Deducts coins and adds item to garden
-	 * 
-	 * @param item The item to purchase
-	 * @return boolean true if purchase successful, false if not enough coins
-	 */
-	public static boolean canBuy(GardenItem item) {
-		if ( item.getPrice() <= money) return true;
-		else return false;
+        // Add listener so money stays in sync when TaskManager updates
+        TaskManager.addListener(() -> money = TaskManager.getCoins());
+    }
 
-	}
-	
-	public static int getMoney() {
-		return money;
-	}
-	
-	public static void setMoney(int moneyToAdd) {
-		money = moneyToAdd;
-	}
+    public static boolean canBuy(GardenItem item) {
+        return item.getPrice() <= money;
+    }
 
+    public static boolean buyItem(GardenItem item) {
+        if (canBuy(item)) {
+            TaskManager.addCoins(-item.getPrice()); // deduct shared coins
+            Main.addToWorld(item);
+            return true;
+        }
+        return false;
+    }
+
+    public static int getMoney() {
+        return money;
+    }
+
+    public static void setMoney(int moneyToAdd) {
+        money = moneyToAdd;
+        TaskManager.addCoins(moneyToAdd - money);
+    }
 }

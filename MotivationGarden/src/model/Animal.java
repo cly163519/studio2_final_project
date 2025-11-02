@@ -83,6 +83,11 @@ public class Animal extends GardenItem {
     	return this.price;
     }
     
+    /**
+     * Trigger this animal's move method.
+     * 
+     * @return N/A
+     */
     public void moveRandomly() {
     	
     }

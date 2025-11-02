@@ -24,6 +24,8 @@ public class Tile {
 	
 	private int x; // <- Where this tile is in the GUI.
 	private int y;
+	
+	private String highlightImagePath = "../MotivationGarden/resources/images/ui/tile_highlight.png";
 
 //	Constructor:
 	public Tile(int x, int y, double xMin, double xMax, double yMin, double yMax, int gridX, int gridY) {
@@ -64,6 +66,10 @@ public class Tile {
 	*																														*/
 	public void drawTile() {
 		UI.drawRect(x, y, 32, 32);
+	}
+	
+	public void drawHighlight() {
+		UI.drawImage(highlightImagePath, x, y);
 	}
 	
 	/// Getters & Setters:

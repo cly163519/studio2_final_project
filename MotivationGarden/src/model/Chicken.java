@@ -15,8 +15,8 @@ public class Chicken extends Animal {
 		this.positionX = x;
 		this.positionY = y;
 		this.type = "chicken";
-		this.moveChance = 8;
-		this.price = 18;
+		this.moveChance = 0.2;
+		this.price = 15;
 	}
 	
 	@Override
@@ -26,8 +26,8 @@ public class Chicken extends Animal {
 	
 	@Override
     public void moveRandomly() {
-		int randomNumber = Main.randomInt(1, 10);
-		if ( randomNumber >= moveChance ) {
+		double randomNumber = Main.randomDouble(0, 1);
+		if ( randomNumber <= moveChance ) {
 			
 			int moveX = Main.randomInt(-1, 1);
 	        if (this.positionX + moveX >= 1 && this.positionX + moveX <= Main.getGardenWidth() ) {
